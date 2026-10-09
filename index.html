@@ -1220,7 +1220,7 @@ body.is-dragging, body.is-dragging * { cursor: grabbing !important; }
       </div>
       <div class="modal-row">
         <div class="field"><label>商談フェーズ</label><select id="dl-stage"></select></div>
-        <div class="field"><label>流入経路</label><select id="dl-source"><option>紹介</option><option>説明会/セミナー</option><option>Web問い合わせ</option><option>展示会</option><option>既存顧客</option><option>テレアポ</option></select></div>
+        <div class="field"><label>流入経路</label><select id="dl-source"><option>紹介</option><option>既存客</option><option>説明会/セミナー</option><option>Web問い合わせ</option><option>展示会</option><option>テレアポ</option></select></div>
       </div>
       <div class="modal-row">
         <div class="field"><label>提案商材</label><select id="dl-product" onchange="updateDealAmountLabel()"><option value="standard">スタンダード（月額）</option><option value="light">ライト（月額）</option><option value="project">プロジェクト型（一括）</option><option value="training">研修（一括）</option></select></div>
@@ -2676,7 +2676,7 @@ function scheduleDeal(){
 const STORE_KEY = DEMO ? 'aibuddy-portal:demo:'+(DEMO.version||1) : 'aibuddy-portal:prod';  // デモはデータ版が変わると初期化
 let storeWarned=false, resetting=false;
 function persist(){
-  if(resetting) return;  // リセット中はページ離脱時の自動保存で書き戻さない
+  if(resetting) return;  // リセット中は書き戻さない
   try{
     localStorage.setItem(STORE_KEY, JSON.stringify({v:1,savedAt:new Date().toISOString(),staff:STAFF,clients:clientList,events,nextId,nextClientId,deals,nextDealId}));
   }catch(err){
@@ -2706,10 +2706,18 @@ function resetDemo(){
   const fn=window[name];
   window[name]=function(...args){const r=fn.apply(this,args);persist();return r;};
 });
-addEventListener('pagehide',persist);
+// ページ離脱時の自動保存はしない（別タブで登録した新しいデータを古い内容で上書きしないため。保存は各操作の直後に実行済み）
+// 別タブで保存されたら、このタブも最新データに切り替える
+addEventListener('storage',ev=>{
+  if(ev.key!==STORE_KEY||ev.newValue==null) return;
+  restore();
+  populateStaffSelects();buildSidebarStaff();
+  switchPage(currentPage);
+});
 
 // ── INIT ── //
 restore();
+deals.forEach(d=>{if(d.source==='既存顧客')d.source='既存客';});
 if(DEMO) document.getElementById('demoReset').hidden=false;
 populateStaffSelects();
 buildSidebarStaff();
