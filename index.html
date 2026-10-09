@@ -1,0 +1,1874 @@
+<title>AI BUDDY 管理ポータル</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --sidebar-bg:   #1C2A5E;
+  --sidebar-w:    220px;
+  --page-bg:      #EEF2FA;
+  --surface:      #FFFFFF;
+  --primary:      #4A7BF5;
+  --primary-dark: #3561D4;
+  --primary-bg:   #EBF1FF;
+  --border:       #E4E9F5;
+  --border-2:     #D1D9EF;
+  --fg:           #1A1D2E;
+  --fg2:          #3D4466;
+  --fg3:          #6B7280;
+  --fg4:          #A0ABBA;
+  --grn:          #16A34A;
+  --grn-bg:       #DCFCE7;
+  --grn-fg:       #166534;
+  --amb:          #D97706;
+  --amb-bg:       #FEF3C7;
+  --amb-fg:       #92400E;
+  --red:          #DC2626;
+  --red-bg:       #FEE2E2;
+  --red-fg:       #991B1B;
+  --pur:          #7C3AED;
+  --pur-bg:       #EDE9FE;
+  --pur-fg:       #4C1D95;
+  --card-shadow:  0 1px 3px rgba(26,29,46,.06), 0 4px 16px rgba(26,29,46,.05);
+  --font:         'Inter', -apple-system, BlinkMacSystemFont, 'Hiragino Sans', sans-serif;
+  --mono:         'IBM Plex Mono', 'Courier New', monospace;
+  color-scheme: light;
+}
+*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+html,body { height: 100%; font-family: var(--font); color: var(--fg); background: var(--page-bg); font-size: 13px; overflow: hidden; }
+
+/* ── LAYOUT ── */
+.app { display: flex; height: 100vh; }
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width: var(--sidebar-w);
+  background: var(--sidebar-bg);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  overflow: hidden;
+  transition: transform .24s cubic-bezier(.4,0,.2,1);
+  z-index: 50;
+}
+.sidebar-logo {
+  padding: 20px 18px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+.sidebar-logo-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  background: linear-gradient(135deg, #4A7BF5 0%, #7B9EFF 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  flex-shrink: 0;
+}
+.sidebar-logo-text { color: #fff; font-weight: 700; font-size: 14px; line-height: 1.2; }
+.sidebar-logo-sub  { color: rgba(255,255,255,.45); font-size: 10px; font-weight: 400; }
+
+.sidebar-nav { padding: 12px 10px; flex: 1; overflow-y: auto; }
+.sidebar-nav-label { font-size: 9.5px; font-weight: 600; color: rgba(255,255,255,.35); letter-spacing: .08em; text-transform: uppercase; padding: 8px 8px 4px; }
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border-radius: 8px;
+  color: rgba(255,255,255,.6);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background .14s, color .14s;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+}
+.nav-item .ni-icon { font-size: 15px; width: 20px; text-align: center; flex-shrink: 0; }
+.nav-item:hover { background: rgba(255,255,255,.08); color: #fff; }
+.nav-item.active { background: rgba(74,123,245,.25); color: #fff; }
+.nav-item.active .ni-icon { filter: none; }
+
+.sidebar-staff { padding: 12px 10px; border-top: 1px solid rgba(255,255,255,.08); }
+.sidebar-staff-label { font-size: 9.5px; font-weight: 600; color: rgba(255,255,255,.35); letter-spacing: .08em; text-transform: uppercase; padding: 4px 8px 8px; }
+.staff-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 2px;
+  transition: background .12s;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  color: rgba(255,255,255,.6);
+  font-size: 12px;
+  font-weight: 500;
+}
+.staff-chip:hover { background: rgba(255,255,255,.07); color: #fff; }
+.staff-chip.active { background: rgba(255,255,255,.12); color: #fff; }
+.staff-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* ── MAIN AREA ── */
+.content { flex: 1; display: flex; flex-direction: column; min-width: 0; overflow: hidden; }
+
+/* ── TOP BAR ── */
+.topbar {
+  height: 56px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  gap: 12px;
+  flex-shrink: 0;
+}
+.topbar-title { font-size: 15px; font-weight: 700; color: var(--fg); flex: 1; }
+.topbar-search {
+  display: flex;
+  align-items: center;
+  background: var(--page-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0 12px;
+  gap: 7px;
+  height: 34px;
+  width: 200px;
+  font-size: 12px;
+  color: var(--fg3);
+  cursor: text;
+}
+.topbar-btn {
+  height: 34px;
+  border-radius: 8px;
+  border: none;
+  padding: 0 14px;
+  font-family: var(--font);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+.topbar-btn.primary { background: var(--primary); color: #fff; }
+.topbar-btn.primary:hover { background: var(--primary-dark); }
+.topbar-btn.secondary { background: var(--page-bg); color: var(--fg2); border: 1px solid var(--border); }
+.topbar-btn.secondary:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-bg); }
+.topbar-btn.green-btn { background: #16A34A; color: #fff; }
+.topbar-btn.green-btn:hover { background: #15803D; }
+
+.topbar-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: linear-gradient(135deg,#4A7BF5,#7B9EFF);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* week nav */
+.week-nav { display: flex; align-items: center; gap: 6px; }
+.wbtn { background: var(--page-bg); border: 1px solid var(--border); color: var(--fg2); border-radius: 7px; width: 28px; height: 28px; cursor: pointer; font-size: 11px; display: flex; align-items: center; justify-content: center; }
+.wbtn:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-bg); }
+.week-label { font-size: 12px; font-weight: 600; color: var(--fg2); min-width: 130px; text-align: center; }
+.btn-today { background: var(--page-bg); border: 1px solid var(--border); border-radius: 7px; padding: 4px 10px; font-family: var(--font); font-size: 11px; font-weight: 600; color: var(--fg2); cursor: pointer; }
+.btn-today:hover { border-color: var(--primary); color: var(--primary); }
+
+/* staff filter tabs */
+.staff-filters { display: flex; gap: 4px; }
+.staff-filter {
+  border: 1px solid var(--border);
+  background: var(--page-bg);
+  color: var(--fg3);
+  border-radius: 20px;
+  padding: 3px 12px;
+  font-size: 11px;
+  font-family: var(--font);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .12s;
+}
+.staff-filter.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+.staff-filter:hover:not(.active) { border-color: var(--primary); color: var(--primary); }
+
+/* ── PAGE BODY ── */
+.page-body { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 20px; min-height: 0; }
+.page-body.no-pad { padding: 0; }
+
+/* page wrapper divs must be flex containers so inner .page-body can flex:1 */
+#pageDashboard, #pageClients, #pageSales, #pageSchedule {
+  flex: 1; display: flex; flex-direction: column; min-height: 0; overflow: hidden;
+}
+
+/* ── CARDS ── */
+.card {
+  background: var(--surface);
+  border-radius: 12px;
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+}
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px 0;
+}
+.card-title { font-size: 13px; font-weight: 700; color: var(--fg); }
+.card-body { padding: 14px 18px; }
+.card-body.no-top { padding-top: 10px; }
+
+/* ── KPI GRID ── */
+.kpi-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 16px; }
+.kpi-card {
+  background: var(--surface);
+  border-radius: 12px;
+  box-shadow: var(--card-shadow);
+  padding: 16px 18px;
+  border-left: 3px solid transparent;
+}
+.kpi-card.blue  { border-left-color: var(--primary); }
+.kpi-card.green { border-left-color: var(--grn); }
+.kpi-card.amber { border-left-color: var(--amb); }
+.kpi-card.purple{ border-left-color: var(--pur); }
+.kpi-card.red   { border-left-color: var(--red); }
+.kpi-label { font-size: 11px; font-weight: 600; color: var(--fg3); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 6px; }
+.kpi-value { font-size: 22px; font-weight: 700; color: var(--fg); line-height: 1; margin-bottom: 5px; font-variant-numeric: tabular-nums; }
+.kpi-diff { font-size: 11px; color: var(--fg4); }
+.kpi-diff .up   { color: var(--grn); font-weight: 600; }
+.kpi-diff .dn   { color: var(--red); font-weight: 600; }
+
+/* ── PILL BADGES ── */
+.pill { display: inline-flex; align-items: center; gap: 3px; border-radius: 20px; padding: 2px 9px; font-size: 11px; font-weight: 600; line-height: 1.5; }
+.pill.blue   { background: var(--primary-bg); color: var(--primary); }
+.pill.green  { background: var(--grn-bg);     color: var(--grn-fg); }
+.pill.amber  { background: var(--amb-bg);     color: var(--amb-fg); }
+.pill.red    { background: var(--red-bg);     color: var(--red-fg); }
+.pill.purple { background: var(--pur-bg);     color: var(--pur-fg); }
+.pill.grey   { background: #F1F5F9;           color: var(--fg3); }
+
+/* ── DATA TABLE ── */
+.table-wrap { overflow-x: auto; }
+table.dt { width: 100%; border-collapse: collapse; font-size: 12px; }
+table.dt thead th { padding: 10px 14px; background: var(--page-bg); color: var(--fg3); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; text-align: left; border-bottom: 1px solid var(--border); white-space: nowrap; }
+table.dt tbody tr { border-bottom: 1px solid var(--border); }
+table.dt tbody tr:last-child { border-bottom: none; }
+table.dt tbody tr:hover { background: var(--page-bg); }
+table.dt tbody td { padding: 10px 14px; color: var(--fg); vertical-align: middle; }
+table.dt td.num { text-align: right; font-family: var(--mono); font-size: 11px; font-weight: 600; }
+table.dt td.center { text-align: center; }
+table.dt td.link-cell { color: var(--primary); font-weight: 600; cursor: pointer; }
+table.dt td.link-cell:hover { text-decoration: underline; }
+
+/* ── HOME PAGE ── */
+.home-hero {
+  background: linear-gradient(135deg, #1C2A5E 0%, #2B4590 50%, #3561D4 100%);
+  border-radius: 16px;
+  padding: 24px 28px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 24px rgba(74,123,245,.25);
+}
+.home-hero-left h2 { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+.home-hero-left p  { font-size: 12px; color: rgba(255,255,255,.7); }
+.home-hero-kpi { display: flex; gap: 24px; }
+.hero-stat { text-align: center; }
+.hero-stat-val { font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1; }
+.hero-stat-lbl { font-size: 10px; color: rgba(255,255,255,.6); margin-top: 3px; }
+.hero-stat-divider { width: 1px; background: rgba(255,255,255,.2); align-self: stretch; }
+
+.nav-banner-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 16px; }
+.nav-banner {
+  background: var(--surface);
+  border-radius: 12px;
+  box-shadow: var(--card-shadow);
+  padding: 16px;
+  cursor: pointer;
+  transition: transform .12s, box-shadow .12s;
+  border: 1px solid transparent;
+}
+.nav-banner:hover { transform: translateY(-2px); box-shadow: 0 4px 20px rgba(26,29,46,.1); border-color: var(--primary); }
+.nb-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; }
+.nb-icon svg { width: 20px; height: 20px; }
+.ni-icon { width: 20px; text-align: center; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+.ni-icon svg { width: 16px; height: 16px; }
+.activity-icon svg { width: 16px; height: 16px; }
+.obj-icon svg { width: 22px; height: 22px; }
+.nb-title { font-size: 13px; font-weight: 700; color: var(--fg); margin-bottom: 3px; }
+.nb-desc  { font-size: 11px; color: var(--fg3); margin-bottom: 8px; }
+.nb-count { font-size: 18px; font-weight: 700; color: var(--primary); }
+.nb-count small { font-size: 10px; font-weight: 400; color: var(--fg4); margin-left: 3px; }
+
+.home-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+.activity-row { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--border); }
+.activity-row:last-child { border-bottom: none; }
+.activity-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.activity-body { flex: 1; min-width: 0; }
+.activity-body strong { font-weight: 600; font-size: 12px; }
+.activity-time { font-size: 11px; color: var(--fg4); white-space: nowrap; }
+
+/* ── SCHEDULE (CALENDAR) ── */
+.sched-container { height: calc(100vh - 56px); display: flex; flex-direction: column; overflow: hidden; }
+.cal-scroll { flex: 1; overflow: auto; }
+.cal-grid {
+  display: grid;
+  --day-count: 5;
+  grid-template-columns: 52px repeat(var(--day-count),1fr);
+  min-width: 720px;
+}
+.time-corner { background: var(--surface); border-right: 1px solid var(--border); border-bottom: 2px solid var(--border-2); position: sticky; top: 0; left: 0; z-index: 3; height: 48px; }
+.day-hd {
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  border-bottom: 2px solid var(--border-2);
+  text-align: center;
+  padding: 8px 4px;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.day-hd .dow { font-size: 10px; font-weight: 600; color: var(--fg3); text-transform: uppercase; letter-spacing: .05em; }
+.day-hd .dom { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: var(--fg); }
+.day-hd.today .dom { background: var(--primary); color: #fff; }
+.time-lbl { background: var(--surface); border-right: 1px solid var(--border); font-size: 9px; color: var(--fg4); text-align: right; padding: 3px 6px 0; height: 24px; position: sticky; left: 0; z-index: 1; font-family: var(--mono); }
+.cal-cell { height: 24px; border-right: 1px solid var(--border); border-bottom: 1px solid #F3F6FC; position: relative; cursor: pointer; transition: background .1s; }
+.cal-cell:hover { background: var(--primary-bg); }
+.cal-cell.alt { background: #FAFBFF; }
+
+.ev {
+  position: absolute;
+  left: 2px;
+  right: 2px;
+  border-radius: 6px;
+  padding: 3px 6px;
+  font-size: 10px;
+  cursor: pointer;
+  overflow: hidden;
+  border-left: 3px solid transparent;
+  box-shadow: 0 1px 4px rgba(0,0,0,.08);
+  z-index: 1;
+}
+.ev:hover { filter: brightness(.95); z-index: 2; }
+.ev-time { font-size: 9px; font-weight: 600; opacity: .7; margin-bottom: 1px; }
+.ev-name { font-weight: 700; font-size: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ev-visit   { background:#DBEAFE; color:#1E40AF; border-left-color:#3B82F6; }
+.ev-online  { background:#DCFCE7; color:#166534; border-left-color:#22C55E; }
+.ev-chat    { background:#EDE9FE; color:#4C1D95; border-left-color:#8B5CF6; }
+.ev-report  { background:#FEF3C7; color:#92400E; border-left-color:#F59E0B; }
+.ev-seminar { background:#FFE4E6; color:#9F1239; border-left-color:#F43F5E; }
+
+.cal-legend { display: flex; gap: 14px; align-items: center; font-size: 11px; }
+.leg-dot { width: 10px; height: 10px; border-radius: 3px; }
+
+/* ── CLIENTS ── */
+.section-hd {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px 12px;
+  border-bottom: 1px solid var(--border);
+}
+.section-hd-title { font-size: 12px; font-weight: 700; color: var(--fg2); display: flex; align-items: center; gap: 8px; }
+.staff-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+.section-count { background: var(--page-bg); color: var(--fg3); border-radius: 20px; padding: 1px 8px; font-size: 11px; font-weight: 600; }
+
+/* ── MODALS ── */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(26,29,46,.45);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+.modal {
+  background: var(--surface);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 480px;
+  box-shadow: 0 20px 60px rgba(26,29,46,.2);
+  overflow: hidden;
+}
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background: var(--primary);
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+}
+.modal-header.green { background: #16A34A; }
+.modal-close { background: rgba(255,255,255,.2); border: none; color: #fff; border-radius: 6px; width: 26px; height: 26px; cursor: pointer; font-size: 13px; display: flex; align-items: center; justify-content: center; }
+.modal-close:hover { background: rgba(255,255,255,.3); }
+.modal-body { padding: 18px 20px; display: flex; flex-direction: column; gap: 12px; }
+.modal-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.modal-footer { padding: 12px 20px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 8px; background: #FAFBFE; }
+
+.field { display: flex; flex-direction: column; gap: 4px; }
+.field label { font-size: 11px; font-weight: 600; color: var(--fg3); }
+.field input, .field select {
+  height: 36px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: 0 10px;
+  font-family: var(--font);
+  font-size: 12px;
+  color: var(--fg);
+  background: var(--surface);
+  outline: none;
+  transition: border-color .12s;
+}
+.field input:focus, .field select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(74,123,245,.12); }
+
+.recur-box { background: var(--page-bg); border: 1.5px solid var(--border); border-radius: 10px; padding: 12px 14px; }
+.recur-box-label { font-size: 11px; font-weight: 700; color: var(--fg3); margin-bottom: 8px; }
+
+.mf-btn {
+  height: 34px;
+  border-radius: 8px;
+  border: 1.5px solid var(--border);
+  padding: 0 16px;
+  font-family: var(--font);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--fg2);
+  background: var(--surface);
+  transition: all .12s;
+}
+.mf-btn:hover { border-color: var(--primary); color: var(--primary); }
+.mf-btn.primary { background: var(--primary); color: #fff; border-color: var(--primary); }
+.mf-btn.primary:hover { background: var(--primary-dark); }
+.mf-btn.danger  { background: var(--red-bg); color: var(--red); border-color: var(--red); }
+.mf-btn.danger:hover { background: var(--red); color: #fff; }
+.mf-btn.green   { background: #16A34A; color: #fff; border-color: #16A34A; }
+.mf-btn.green:hover { background: #15803D; }
+
+/* ev detail */
+.ev-det-row { display: flex; gap: 8px; padding: 7px 0; border-bottom: 1px solid var(--border); font-size: 12px; }
+.ev-det-row:last-child { border-bottom: none; }
+.ev-det-label { font-weight: 600; color: var(--fg3); min-width: 72px; font-size: 11px; }
+
+/* ── CHARTS ── */
+.chart-grid { display: grid; gap: 12px; }
+.sales-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+.hbar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.hbar-label { font-size: 11px; font-weight: 600; color: var(--fg2); width: 88px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hbar-track { flex: 1; height: 10px; background: var(--page-bg); border-radius: 5px; overflow: hidden; }
+.hbar-fill { height: 100%; border-radius: 5px; min-width: 2px; display: flex; align-items: center; padding: 0 4px; }
+.hbar-fill span { font-size: 8px; font-weight: 700; color: #fff; white-space: nowrap; }
+.hbar-val { font-size: 11px; font-family: var(--mono); color: var(--fg3); white-space: nowrap; }
+.plan-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.plan-swatch { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+.plan-name { font-size: 12px; font-weight: 600; color: var(--fg); flex: 1; }
+.plan-track { flex: 2; height: 8px; background: var(--page-bg); border-radius: 4px; overflow: hidden; }
+.plan-fill  { height: 100%; border-radius: 4px; }
+.plan-mrr   { font-size: 11px; font-family: var(--mono); font-weight: 700; width: 72px; text-align: right; }
+
+/* ── ROW ACTION BUTTONS ── */
+.row-actions { display: flex; gap: 4px; opacity: 0; transition: opacity .12s; }
+tr:hover .row-actions { opacity: 1; }
+.row-btn {
+  display: flex; align-items: center; justify-content: center;
+  width: 26px; height: 26px; border-radius: 6px; border: 1px solid var(--border);
+  background: var(--surface); cursor: pointer; color: var(--fg3); transition: all .12s;
+}
+.row-btn:hover.edit  { border-color: var(--primary); color: var(--primary); background: var(--primary-bg); }
+.row-btn:hover.del   { border-color: var(--red);     color: var(--red);     background: var(--red-bg); }
+.row-btn svg { width: 13px; height: 13px; }
+
+/* ── DELETE CONFIRM BAR ── */
+#deleteConfirmBar {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: var(--fg); color: #fff;
+  padding: 14px 20px; display: flex; align-items: center; gap: 12px;
+  z-index: 200; transform: translateY(100%); transition: transform .2s;
+  font-size: 13px; pointer-events: none;
+}
+#deleteConfirmBar.open { transform: translateY(0); pointer-events: auto; }
+#deleteConfirmBar .dcb-name { flex: 1; font-weight: 600; }
+.dcb-btn { height: 30px; border-radius: 7px; border: none; padding: 0 14px; font-family: var(--font); font-size: 12px; font-weight: 600; cursor: pointer; }
+.dcb-btn.cancel  { background: rgba(255,255,255,.15); color: #fff; }
+.dcb-btn.cancel:hover  { background: rgba(255,255,255,.25); }
+.dcb-btn.confirm { background: var(--red); color: #fff; }
+
+/* ── DATE PICKER ── */
+.date-picker-wrap { position: relative; }
+.dp-trigger {
+  display: flex; align-items: center; gap: 8px;
+  height: 34px; padding: 0 10px; border-radius: 8px;
+  border: 1px solid var(--border-2); background: var(--surface);
+  cursor: pointer; font-size: 12px; color: var(--fg); font-family: var(--font);
+  transition: border-color .12s;
+}
+.dp-trigger:hover { border-color: var(--primary); }
+.dp-trigger.empty { color: var(--fg4); }
+.dp-trigger svg { width:14px; height:14px; color:var(--fg3); flex-shrink:0; }
+.dp-cal {
+  position: fixed; z-index: 9999;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; box-shadow: 0 8px 32px rgba(26,29,46,.18);
+  padding: 12px; width: 260px; display: none;
+}
+.dp-cal.open { display: block; }
+.dp-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.dp-nav-btn { background: var(--page-bg); border: 1px solid var(--border); border-radius: 6px; width: 26px; height: 26px; cursor: pointer; font-size: 13px; display: flex; align-items: center; justify-content: center; color: var(--fg2); }
+.dp-nav-btn:hover { background: var(--primary-bg); color: var(--primary); }
+.dp-month-lbl { font-size: 13px; font-weight: 700; color: var(--fg); }
+.dp-dow { display: grid; grid-template-columns: repeat(7,1fr); gap: 2px; margin-bottom: 4px; }
+.dp-dow span { text-align: center; font-size: 10px; font-weight: 600; color: var(--fg4); padding: 2px 0; }
+.dp-days { display: grid; grid-template-columns: repeat(7,1fr); gap: 2px; }
+.dp-day {
+  aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+  border-radius: 6px; font-size: 12px; cursor: pointer; color: var(--fg2);
+  border: none; background: none; font-family: var(--font);
+}
+.dp-day:hover:not(.dp-day-empty) { background: var(--primary-bg); color: var(--primary); }
+.dp-day.selected { background: var(--primary); color: #fff; font-weight: 700; }
+.dp-day.today { outline: 2px solid var(--primary); outline-offset: -2px; }
+.dp-day-empty { cursor: default; }
+.dcb-btn.confirm:hover { background: #b91c1c; }
+
+/* ── TOAST ── */
+#toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--fg);
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  box-shadow: 0 4px 20px rgba(0,0,0,.18);
+  z-index: 300;
+  opacity: 0;
+  transition: opacity .25s;
+  pointer-events: none;
+}
+
+/* ── OBJECT HEADER ── */
+.obj-header {
+  background: var(--surface);
+  border-radius: 12px;
+  box-shadow: var(--card-shadow);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+.obj-icon { width: 44px; height: 44px; border-radius: 11px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.obj-meta { flex: 1; }
+.obj-label { font-size: 10px; font-weight: 600; color: var(--fg3); text-transform: uppercase; letter-spacing: .06em; }
+.obj-name  { font-size: 17px; font-weight: 700; color: var(--fg); line-height: 1.2; }
+.obj-sub   { font-size: 11px; color: var(--fg4); margin-top: 2px; }
+.obj-badges { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+
+/* ── HAMBURGER ── */
+.hamburger { display: none; background: none; border: none; cursor: pointer; padding: 4px; border-radius: 6px; color: var(--fg2); }
+.hamburger:hover { background: var(--page-bg); }
+.hamburger svg { display: block; }
+
+/* ── SIDEBAR OVERLAY ── */
+.sidebar-backdrop { display: none; position: fixed; inset: 0; background: rgba(26,29,46,.45); z-index: 49; }
+
+/* ── BOTTOM NAV (mobile only) ── */
+.bottom-nav {
+  display: none;
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  height: 60px;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  z-index: 40;
+  align-items: stretch;
+}
+.bn-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--fg4);
+  font-size: 9px;
+  font-family: var(--font);
+  font-weight: 600;
+  transition: color .12s;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.bn-item svg { width: 20px; height: 20px; }
+.bn-item.active { color: var(--primary); }
+.bn-item:hover { color: var(--primary); }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 768px) {
+  html,body { overflow: hidden; }
+
+  /* sidebar becomes a drawer */
+  .sidebar {
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    transform: translateX(-100%);
+    box-shadow: 4px 0 24px rgba(26,29,46,.2);
+  }
+  .sidebar.open { transform: translateX(0); }
+  .sidebar-backdrop.open { display: block; }
+
+  /* show hamburger, hide sidebar-staff on desktop */
+  .hamburger { display: flex; align-items: center; justify-content: center; }
+
+  /* content takes full width */
+  .content { width: 100%; }
+
+  /* topbar compact */
+  .topbar { padding: 0 14px; gap: 8px; }
+  .topbar-search { display: none; }
+  .topbar-title { font-size: 14px; }
+
+  /* bottom nav visible */
+  .bottom-nav { display: flex; }
+
+  /* page body gets bottom padding for nav */
+  .page-body { padding: 14px 14px 76px; }
+  .page-body.no-pad { padding: 0 0 76px; }
+
+  /* schedule bottom padding */
+  #pageSchedule { height: calc(100vh - 56px - 60px); }
+
+  /* hero */
+  .home-hero { flex-direction: column; gap: 16px; padding: 18px; }
+  .home-hero-kpi { justify-content: space-around; width: 100%; }
+
+  /* KPI grid */
+  .kpi-grid { grid-template-columns: 1fr 1fr !important; }
+
+  /* nav banners */
+  .nav-banner-grid { grid-template-columns: 1fr 1fr; }
+
+  /* home cols */
+  .home-cols { grid-template-columns: 1fr; }
+
+  /* sales/dashboard grids */
+  .sales-grid { grid-template-columns: 1fr; }
+
+  /* obj-header compact */
+  .obj-header { flex-wrap: wrap; }
+  .obj-badges { width: 100%; }
+
+  /* topbar action buttons */
+  .topbar-btn span { display: none; }
+  .topbar-btn { padding: 0 10px; min-width: 34px; justify-content: center; }
+}
+
+@media (max-width: 480px) {
+  .kpi-grid { grid-template-columns: 1fr !important; }
+  .nav-banner-grid { grid-template-columns: 1fr; }
+  .modal { margin: 0 8px; }
+  .modal-row { grid-template-columns: 1fr; }
+}
+</style>
+
+<!-- ════════ LAYOUT ════════ -->
+<div class="app">
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <div class="sidebar-logo-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+    <div>
+      <div class="sidebar-logo-text">AI BUDDY</div>
+      <div class="sidebar-logo-sub">Management Portal</div>
+    </div>
+  </div>
+
+  <div class="sidebar-nav">
+    <div class="sidebar-nav-label">メニュー</div>
+    <button class="nav-item active" id="nav-home"       onclick="switchPage('home')">      <span class="ni-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span> ホーム</button>
+    <button class="nav-item"        id="nav-dashboard"  onclick="switchPage('dashboard')"> <span class="ni-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="18" y="3" width="4" height="18" rx="1"/><rect x="10" y="8" width="4" height="13" rx="1"/><rect x="2" y="13" width="4" height="8" rx="1"/></svg></span> ダッシュボード</button>
+    <button class="nav-item"        id="nav-schedule"   onclick="switchPage('schedule')">  <span class="ni-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span> スケジュール</button>
+    <button class="nav-item"        id="nav-clients"    onclick="switchPage('clients')">   <span class="ni-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></span> 顧問リスト</button>
+    <button class="nav-item"        id="nav-sales"      onclick="switchPage('sales')">     <span class="ni-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></span> 売上管理</button>
+  </div>
+
+  <div class="sidebar-staff" id="sidebarStaff">
+    <div class="sidebar-staff-label" style="display:flex;align-items:center;justify-content:space-between;">
+      担当者フィルター
+      <button onclick="openStaffModal()" style="background:rgba(255,255,255,.12);border:none;color:rgba(255,255,255,.7);border-radius:5px;width:20px;height:20px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;" title="担当者を追加">+</button>
+    </div>
+    <button class="staff-chip active" id="ssc-all" onclick="setStaff('all')">
+      <div class="staff-avatar" style="background:#6B7280;">全</div>全員表示
+    </button>
+  </div>
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <button class="hamburger" onclick="toggleSidebar()" aria-label="メニュー"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="22" height="22"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+    <div class="topbar-title" id="topbarTitle">ホーム</div>
+    <div id="weekNav" style="display:none;" class="week-nav">
+      <button class="wbtn" onclick="moveWeek(-1)">‹</button>
+      <button class="btn-today" onclick="goToday()">今週</button>
+      <span class="week-label" id="weekLabel"></span>
+      <button class="wbtn" onclick="moveWeek(1)">›</button>
+    </div>
+    <div id="staffFiltersWrap" style="display:none;" class="staff-filters" id="staffTabs"></div>
+    <div id="legendWrap" style="display:none;" class="cal-legend">
+      <span style="display:flex;align-items:center;gap:4px;"><span class="leg-dot" style="background:#3B82F6;"></span>訪問</span>
+      <span style="display:flex;align-items:center;gap:4px;"><span class="leg-dot" style="background:#22C55E;"></span>オンライン</span>
+      <span style="display:flex;align-items:center;gap:4px;"><span class="leg-dot" style="background:#8B5CF6;"></span>チャット</span>
+      <span style="display:flex;align-items:center;gap:4px;"><span class="leg-dot" style="background:#F59E0B;"></span>レポート</span>
+      <span style="display:flex;align-items:center;gap:4px;"><span class="leg-dot" style="background:#F43F5E;"></span>説明会</span>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <button class="topbar-btn secondary" id="btnNewClient" style="display:none;" onclick="openClientModal()">＋ お客様を登録</button>
+      <button class="topbar-btn primary"   id="btnNew"       style="display:none;" onclick="openAddModal()">＋ 予定を追加</button>
+      <button class="topbar-btn primary"   id="btnNewEvent2" style="display:none;" onclick="openAddModal()">＋ 予定を追加</button>
+      <div class="topbar-avatar">AI</div>
+    </div>
+  </div>
+
+  <!-- ─── HOME ─── -->
+  <div id="pageHome" class="page-body">
+    <div class="kpi-grid">
+      <div class="kpi-card blue"><div class="kpi-label">当月 MRR</div><div class="kpi-value" id="homeMRR">¥0</div><div class="kpi-diff" id="homeMRRDiff">—</div></div>
+      <div class="kpi-card green"><div class="kpi-label">稼働クライアント</div><div class="kpi-value" id="clientCountPill2">0社</div><div class="kpi-diff">目標 <strong>15社</strong></div></div>
+      <div class="kpi-card amber"><div class="kpi-label">今月 訪問件数</div><div class="kpi-value" id="homeVisits">0件</div><div class="kpi-diff" id="homeVisitsPlan">予定 0件</div></div>
+      <div class="kpi-card purple"><div class="kpi-label">ARR（年間換算）</div><div class="kpi-value" id="homeARR">¥0</div><div class="kpi-diff">—</div></div>
+    </div>
+
+    <div class="nav-banner-grid" style="margin-bottom:16px;">
+      <div class="nav-banner" onclick="switchPage('dashboard')"><div class="nb-icon" style="background:var(--primary-bg);color:var(--primary);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="18" y="3" width="4" height="18" rx="1"/><rect x="10" y="8" width="4" height="13" rx="1"/><rect x="2" y="13" width="4" height="8" rx="1"/></svg></div><div class="nb-title">ダッシュボード</div><div class="nb-desc">KPI・MRR推移・ヘルス</div><div class="nb-count" id="nbMRR">¥0<small>当月 MRR</small></div></div>
+      <div class="nav-banner" onclick="switchPage('schedule')"> <div class="nb-icon" style="background:#EDE9FE;color:var(--pur);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><div class="nb-title">スケジュール</div><div class="nb-desc">週次コマ割・訪問管理</div><div class="nb-count" id="nbSched">7<small>今週の予定</small></div></div>
+      <div class="nav-banner" onclick="switchPage('clients')">  <div class="nb-icon" style="background:var(--grn-bg);color:var(--grn);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div><div class="nb-title">顧問リスト</div><div class="nb-desc">担当者別クライアント</div><div class="nb-count" id="nbClients">11<small>稼働中</small></div></div>
+      <div class="nav-banner" onclick="switchPage('sales')">    <div class="nb-icon" style="background:var(--amb-bg);color:var(--amb);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div><div class="nb-title">売上管理</div><div class="nb-desc">月次レポート・プラン</div><div class="nb-count" id="nbARR">¥0<small>ARR</small></div></div>
+    </div>
+
+    <div class="home-cols">
+      <div class="card"><div class="card-header"><span class="card-title">直近のアクティビティ</span></div><div class="card-body no-top" id="activityList"></div></div>
+      <div class="card"><div class="card-header"><span class="card-title">今週の予定</span></div><div class="card-body no-top" id="upcomingList"></div></div>
+    </div>
+  </div>
+
+  <!-- ─── DASHBOARD ─── -->
+  <div id="pageDashboard" style="display:none;">
+    <div class="page-body" id="dashInner"></div>
+  </div>
+
+  <!-- ─── SCHEDULE ─── -->
+  <div id="pageSchedule" style="display:none;">
+    <div class="cal-scroll" style="flex:1;overflow:auto;background:var(--surface);">
+      <div class="cal-grid" id="calGrid"></div>
+    </div>
+  </div>
+
+  <!-- ─── CLIENTS ─── -->
+  <div id="pageClients" style="display:none;">
+    <div class="page-body">
+      <div class="obj-header">
+        <div class="obj-icon" style="background:var(--grn-bg);color:var(--grn);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
+        <div class="obj-meta">
+          <div class="obj-label">Client Management</div>
+          <div class="obj-name">顧問リスト</div>
+          <div class="obj-sub" id="clientsMeta">担当者別クライアント一覧 · 合計 11社</div>
+        </div>
+      </div>
+      <div id="clientsInner"></div>
+    </div>
+  </div>
+
+  <!-- ─── SALES ─── -->
+  <div id="pageSales" style="display:none;">
+    <div class="page-body" id="salesInner"></div>
+  </div>
+
+</div><!-- /content -->
+</div><!-- /app -->
+
+<!-- SIDEBAR BACKDROP -->
+<div class="sidebar-backdrop" id="sidebarBackdrop" onclick="closeSidebar()"></div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav" id="bottomNav">
+  <button class="bn-item active" id="bn-home"      onclick="switchPage('home')">      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>ホーム</button>
+  <button class="bn-item" id="bn-dashboard" onclick="switchPage('dashboard')"> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="18" y="3" width="4" height="18" rx="1"/><rect x="10" y="8" width="4" height="13" rx="1"/><rect x="2" y="13" width="4" height="8" rx="1"/></svg>DB</button>
+  <button class="bn-item" id="bn-schedule"  onclick="switchPage('schedule')">  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>予定</button>
+  <button class="bn-item" id="bn-clients"   onclick="switchPage('clients')">   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>顧問</button>
+  <button class="bn-item" id="bn-sales"     onclick="switchPage('sales')">     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>売上</button>
+</nav>
+
+<!-- CLIENT MODAL -->
+<div class="overlay" id="clientOverlay" hidden onclick="if(event.target===this)closeClientModal()">
+  <div class="modal" style="max-width:480px;">
+    <div class="modal-header green" id="clientModalHeader">お客様を登録 <button class="modal-close" onclick="closeClientModal()">✕</button></div>
+    <div class="modal-body">
+      <div class="field" style="grid-column:1/-1;"><label>会社名 <span style="color:var(--red);">*</span></label><input type="text" id="cl-name" placeholder="株式会社〇〇"></div>
+      <div class="modal-row">
+        <div class="field"><label>担当者 *</label><select id="cl-staff"></select></div>
+        <div class="field"><label>プラン *</label><select id="cl-plan"><option value="light">ライト（¥200,000/月）</option><option value="standard">スタンダード（¥300,000/月）</option><option value="project">プロジェクト型（スポット）</option></select></div>
+      </div>
+      <div class="modal-row">
+        <div class="field"><label>業種</label><input type="text" id="cl-industry" placeholder="製造業、IT など"></div>
+        <div class="field"><label>契約開始月</label><input type="month" id="cl-since"></div>
+      </div>
+      <div class="field"><label>次回訪問予定日</label><div id="cl-next-picker" class="date-picker-wrap"></div><input type="hidden" id="cl-next"></div>
+      <div class="field"><label>メモ・備考</label><input type="text" id="cl-memo" placeholder="課題・検討中の施策など"></div>
+      <div id="cl-err" style="color:var(--red);font-size:11px;display:none;">会社名を入力してください</div>
+    </div>
+    <div class="modal-footer">
+      <button class="mf-btn" onclick="closeClientModal()">キャンセル</button>
+      <button class="mf-btn green" id="clientSaveBtn" onclick="saveClient()">登録する</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD EVENT MODAL -->
+<div class="overlay" id="addOverlay" hidden onclick="if(event.target===this)closeAdd()">
+  <div class="modal" style="max-width:460px;">
+    <div class="modal-header">新規予定を作成 <button class="modal-close" onclick="closeAdd()">✕</button></div>
+    <div class="modal-body">
+      <div class="modal-row">
+        <div class="field"><label>担当者</label><select id="a-staff"></select></div>
+        <div class="field"><label>種別</label><select id="a-type"><option value="ev-visit">訪問</option><option value="ev-online">オンラインMTG</option><option value="ev-chat">チャット対応</option><option value="ev-report">月次レポート</option><option value="ev-seminar">説明会/セミナー</option></select></div>
+      </div>
+      <div class="field"><label>クライアント</label><select id="a-client"></select></div>
+      <div class="modal-row">
+        <div class="field"><label>開始日 *</label><div id="a-date-picker" class="date-picker-wrap"></div><input type="hidden" id="a-date"></div>
+        <div class="field"><label>開始時刻</label><select id="a-start"></select></div>
+      </div>
+      <div class="field"><label>所要時間</label><select id="a-dur"><option value="1">30分</option><option value="2" selected>1時間</option><option value="3">1.5時間</option><option value="4">2時間</option><option value="6">3時間</option></select></div>
+      <div class="recur-box">
+        <div class="recur-box-label">繰り返し設定</div>
+        <div class="modal-row" style="margin-bottom:6px;">
+          <div class="field" style="margin-bottom:0;"><label>頻度</label>
+            <select id="a-recur" onchange="updateRecurPreview()">
+              <option value="none">繰り返しなし</option>
+              <option value="weekly">毎週（同じ曜日）</option>
+              <option value="biweekly">隔週（2週ごと）</option>
+              <option value="monthly-dow">毎月（同じ曜日）</option>
+              <option value="monthly-date">毎月（同じ日付）</option>
+            </select>
+          </div>
+          <div class="field" style="margin-bottom:0;" id="recurEndWrap"><label>繰り返し終了日</label><input type="date" id="a-recur-end" oninput="updateRecurPreview()"></div>
+        </div>
+        <div id="recurPreview" style="font-size:11px;color:var(--primary);min-height:16px;line-height:1.6;"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="mf-btn" onclick="closeAdd()">キャンセル</button>
+      <button class="mf-btn primary" onclick="saveEvent()">保存する</button>
+    </div>
+  </div>
+</div>
+
+<!-- DETAIL MODAL -->
+<div class="overlay" id="detOverlay" hidden onclick="if(event.target===this)closeDet()">
+  <div class="modal">
+    <div class="modal-header" id="detTitle">予定の詳細 <button class="modal-close" onclick="closeDet()">✕</button></div>
+    <div class="modal-body">
+      <div id="detHeader" style="padding:12px 14px;border-radius:10px;margin-bottom:4px;"></div>
+      <div id="detBody"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="mf-btn danger" onclick="deleteEvent()">この予定を削除</button>
+      <button id="detSeriesBtn" class="mf-btn" style="display:none;background:var(--amb-bg);color:var(--amb-fg);border-color:var(--amb);" onclick="deleteSeriesEvent()">↺ シリーズを全削除</button>
+      <button class="mf-btn" onclick="closeDet()">閉じる</button>
+    </div>
+  </div>
+</div>
+
+<!-- STAFF MODAL -->
+<div class="overlay" id="staffOverlay" hidden onclick="if(event.target===this)closeStaffModal()">
+  <div class="modal" style="max-width:400px;">
+    <div class="modal-header" style="background:var(--fg);">担当者を追加 <button class="modal-close" onclick="closeStaffModal()">✕</button></div>
+    <div class="modal-body">
+      <div class="modal-row">
+        <div class="field"><label>名前 *</label><input id="sf-name" type="text" placeholder="例：鈴木 健一"></div>
+        <div class="field"><label>略称 *</label><input id="sf-short" type="text" placeholder="鈴木" maxlength="4"></div>
+      </div>
+      <div class="field"><label>役割</label><input id="sf-role" type="text" placeholder="Consultant"></div>
+      <div class="field">
+        <label>カラー</label>
+        <div id="sfColorPicker" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px;"></div>
+        <input id="sf-color" type="hidden" value="#4A7BF5">
+      </div>
+      <div class="field-err" id="sf-err" style="display:none;">名前と略称は必須です</div>
+    </div>
+    <div class="modal-footer">
+      <button class="mf-btn" onclick="closeStaffModal()">キャンセル</button>
+      <button class="mf-btn green" onclick="saveStaff()">追加する</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<!-- DELETE CONFIRM BAR -->
+<div id="deleteConfirmBar">
+  <span class="dcb-name" id="dcbName"></span>
+  <button class="dcb-btn cancel"  onclick="cancelDeleteClient()">キャンセル</button>
+  <button class="dcb-btn confirm" onclick="execDeleteClient()">削除する</button>
+</div>
+
+<script>
+// ── DATA ── //
+let STAFF = [];
+const STAFF_COLORS = [
+  {color:'#4A7BF5',bg:'#EBF1FF'},{color:'#8B5CF6',bg:'#EDE9FE'},{color:'#16A34A',bg:'#DCFCE7'},
+  {color:'#D97706',bg:'#FEF3C7'},{color:'#DC2626',bg:'#FEE2E2'},{color:'#EC4899',bg:'#FCE7F3'},
+  {color:'#0D9488',bg:'#CCFBF1'},{color:'#EA580C',bg:'#FFEDD5'},{color:'#7C3AED',bg:'#EDE9FE'},
+  {color:'#0284C7',bg:'#E0F2FE'},
+];
+const CLIENTS = ['株式会社田中製作所','有限会社山本商事','合同会社鈴木食品','株式会社青山物流','株式会社大阪印刷','有限会社名古屋電機','株式会社福岡農業','合同会社東京広告','株式会社仙台テック','合同会社広島物産','株式会社神戸設計'];
+const PLANS = {
+  light:    { label:'ライト',        color:'#6366F1', bg:'#EEF0FF', mrr:200000 },
+  standard: { label:'スタンダード',  color:'#4A7BF5', bg:'#EBF1FF', mrr:300000 },
+  project:  { label:'プロジェクト型',color:'#8B5CF6', bg:'#EDE9FE', mrr:0 },
+};
+const clientList = [];
+const MRR_HISTORY = [];
+let events = [];
+let nextId = 20;
+const TODAY = new Date(2026,9,9);
+let weekStart = new Date(TODAY); weekStart.setDate(TODAY.getDate()-((TODAY.getDay()+6)%7));
+let activeStaff = 'all';
+let detEventId = null, addSlotDate = null, addSlotTime = null;
+
+function dateStr(d){return`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
+function addDays(d,n){const r=new Date(d);r.setDate(r.getDate()+n);return r;}
+const SLOTS=[];for(let h=9;h<21;h++){SLOTS.push(`${h}:00`);SLOTS.push(`${h}:30`);}
+const TYPE_LABEL={'ev-visit':'訪問','ev-online':'オンラインMTG','ev-chat':'チャット対応','ev-report':'月次レポート','ev-seminar':'説明会/セミナー'};
+const _svg=(d,extra='')=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ${extra}>${d}</svg>`;
+const TYPE_ICON={
+  'ev-visit':   _svg('<rect x="2" y="7" width="20" height="15" rx="1"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><line x1="12" y1="12" x2="12" y2="12.01"/><path d="M2 12h20"/>'),
+  'ev-online':  _svg('<rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>'),
+  'ev-chat':    _svg('<path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>'),
+  'ev-report':  _svg('<path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>'),
+  'ev-seminar': _svg('<path d="M12 1a3 3 0 003 3V1a3 3 0 00-6 0 3 3 0 003 3z"/><path d="M19 10a7 7 0 01-14 0"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/>'),
+};
+const fmt=n=>'¥'+n.toLocaleString('ja-JP');
+
+// ── SIDEBAR TOGGLE ── //
+function toggleSidebar(){
+  document.querySelector('.sidebar').classList.toggle('open');
+  document.getElementById('sidebarBackdrop').classList.toggle('open');
+}
+function closeSidebar(){
+  document.querySelector('.sidebar').classList.remove('open');
+  document.getElementById('sidebarBackdrop').classList.remove('open');
+}
+
+// ── DATE PICKER ── //
+const DOWS=['日','月','火','水','木','金','土'];
+function buildDatePicker(wrapperId, hiddenId, initialValue=''){
+  const wrap=document.getElementById(wrapperId);
+  if(!wrap) return;
+  let selDate=initialValue||''; // 'YYYY-MM-DD'
+  let viewYear=TODAY.getFullYear(), viewMonth=TODAY.getMonth();
+  if(selDate){const d=new Date(selDate+' 00:00');viewYear=d.getFullYear();viewMonth=d.getMonth();}
+
+  function fmt(d){return d?d.replace(/-/g,'/').slice(5)+'（'+['日','月','火','水','木','金','土'][new Date(d+' 00:00').getDay()]+'）'+'　'+d.slice(0,7).replace('-','/'):'日付を選択';}
+  function render(){
+    const first=new Date(viewYear,viewMonth,1);
+    const lastDay=new Date(viewYear,viewMonth+1,0).getDate();
+    const startDow=first.getDay();
+    const todayStr=dateStr(TODAY);
+    let days='';
+    for(let i=0;i<startDow;i++) days+=`<button class="dp-day dp-day-empty"></button>`;
+    for(let d=1;d<=lastDay;d++){
+      const ds=`${viewYear}-${String(viewMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+      const isSel=ds===selDate, isToday=ds===todayStr;
+      days+=`<button class="dp-day${isSel?' selected':''}${isToday?' today':''}" onclick="dpSelect('${wrapperId}','${hiddenId}','${ds}')">${d}</button>`;
+    }
+    wrap.innerHTML=`
+      <button class="dp-trigger${!selDate?' empty':''}" onclick="dpToggle('${wrapperId}')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <span>${fmt(selDate)}</span>
+      </button>
+      <div class="dp-cal" id="${wrapperId}-cal">
+        <div class="dp-nav">
+          <button class="dp-nav-btn" onclick="dpMove('${wrapperId}','${hiddenId}',-1)">‹</button>
+          <span class="dp-month-lbl">${viewYear}年${viewMonth+1}月</span>
+          <button class="dp-nav-btn" onclick="dpMove('${wrapperId}','${hiddenId}',1)">›</button>
+        </div>
+        <div class="dp-dow">${DOWS.map(d=>`<span>${d}</span>`).join('')}</div>
+        <div class="dp-days">${days}</div>
+      </div>`;
+  }
+  wrap._state={selDate,viewYear,viewMonth};
+  render();
+}
+function dpToggle(wrapperId){
+  const cal=document.getElementById(wrapperId+'-cal');
+  if(!cal) return;
+  const isOpen=cal.classList.contains('open');
+  // close all open pickers first
+  document.querySelectorAll('.dp-cal.open').forEach(c=>c.classList.remove('open'));
+  if(isOpen) return;
+  // position relative to trigger button
+  const trigger=cal.parentElement.querySelector('.dp-trigger');
+  if(trigger){
+    const r=trigger.getBoundingClientRect();
+    const calH=300; // estimated calendar height
+    const spaceBelow=window.innerHeight - r.bottom;
+    if(spaceBelow < calH && r.top > calH){
+      // show above
+      cal.style.top=(r.top - calH - 4)+'px';
+    } else {
+      cal.style.top=(r.bottom + 4)+'px';
+    }
+    cal.style.left=r.left+'px';
+  }
+  cal.classList.add('open');
+}
+function dpSelect(wrapperId, hiddenId, ds){
+  const wrap=document.getElementById(wrapperId);
+  const hidden=document.getElementById(hiddenId);
+  if(!wrap||!hidden) return;
+  const s=wrap._state;
+  s.selDate=ds;
+  hidden.value=ds;
+  buildDatePicker(wrapperId, hiddenId, ds);
+  const cal=document.getElementById(wrapperId+'-cal');
+  if(cal) cal.classList.remove('open');
+}
+function dpMove(wrapperId, hiddenId, dir){
+  const wrap=document.getElementById(wrapperId);
+  if(!wrap) return;
+  const s=wrap._state;
+  // remember position before rebuild
+  const calOld=document.getElementById(wrapperId+'-cal');
+  const savedTop=calOld?calOld.style.top:'';
+  const savedLeft=calOld?calOld.style.left:'';
+  let m=s.viewMonth+dir, y=s.viewYear;
+  if(m<0){m=11;y--;}else if(m>11){m=0;y++;}
+  s.viewMonth=m; s.viewYear=y;
+  buildDatePicker(wrapperId, hiddenId, s.selDate);
+  const cal=document.getElementById(wrapperId+'-cal');
+  if(cal){cal.style.top=savedTop;cal.style.left=savedLeft;cal.classList.add('open');}
+}
+// close picker when clicking outside
+document.addEventListener('click',e=>{
+  document.querySelectorAll('.dp-cal.open').forEach(cal=>{
+    if(!cal.parentElement.contains(e.target)) cal.classList.remove('open');
+  });
+});
+
+// ── POPULATE STAFF SELECTS ── //
+function populateStaffSelects(){
+  const opts = STAFF.map((s,i)=>`<option value="${i}">${s.name}</option>`).join('');
+  ['cl-staff','a-staff'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el){ const v=el.value; el.innerHTML=opts; el.value=v<STAFF.length?v:'0'; }
+  });
+}
+
+// ── STAFF MODAL ── //
+function openStaffModal(){
+  document.getElementById('sf-name').value='';
+  document.getElementById('sf-short').value='';
+  document.getElementById('sf-role').value='Consultant';
+  document.getElementById('sf-err').style.display='none';
+  // default color = first unused
+  const used=STAFF.map(s=>s.color);
+  const def=STAFF_COLORS.find(c=>!used.includes(c.color))||STAFF_COLORS[0];
+  document.getElementById('sf-color').value=def.color;
+  // build color swatches
+  const picker=document.getElementById('sfColorPicker');
+  picker.innerHTML=STAFF_COLORS.map(c=>`
+    <div onclick="selectStaffColor('${c.color}')" style="
+      width:26px;height:26px;border-radius:50%;background:${c.color};cursor:pointer;
+      outline:${document.getElementById('sf-color').value===c.color?'3px solid var(--fg)':'3px solid transparent'};
+      outline-offset:2px;transition:outline .1s;" data-color="${c.color}"></div>`).join('');
+  document.getElementById('staffOverlay').hidden=false;
+}
+function selectStaffColor(color){
+  document.getElementById('sf-color').value=color;
+  document.querySelectorAll('#sfColorPicker div').forEach(el=>{
+    el.style.outline=el.dataset.color===color?'3px solid var(--fg)':'3px solid transparent';
+  });
+}
+function closeStaffModal(){ document.getElementById('staffOverlay').hidden=true; }
+function saveStaff(){
+  const name=document.getElementById('sf-name').value.trim();
+  const short=document.getElementById('sf-short').value.trim();
+  if(!name||!short){ document.getElementById('sf-err').style.display=''; return; }
+  const role=document.getElementById('sf-role').value.trim()||'Consultant';
+  const color=document.getElementById('sf-color').value;
+  const entry=STAFF_COLORS.find(c=>c.color===color)||{color,bg:color+'22'};
+  STAFF.push({name,short,role,color:entry.color,bg:entry.bg});
+  closeStaffModal();
+  populateStaffSelects();
+  buildSidebarStaff();
+  if(currentPage==='schedule'){buildStaffFilters();render();}
+  showToast(`${name} を追加しました`);
+}
+function deleteStaff(i){
+  const assigned=clientList.filter(c=>c.staff===i).length+events.filter(e=>e.staff===i).length;
+  if(assigned>0){ showToast(`${STAFF[i].name} には顧客または予定が割り当て済みです`); return; }
+  const name=STAFF[i].name;
+  STAFF.splice(i,1);
+  // shift staff indices in clientList/events
+  clientList.forEach(c=>{ if(c.staff>i) c.staff--; });
+  events.forEach(e=>{ if(e.staff>i) e.staff--; });
+  if(activeStaff===i) activeStaff='all';
+  else if(typeof activeStaff==='number'&&activeStaff>i) activeStaff--;
+  populateStaffSelects();
+  buildSidebarStaff();
+  if(currentPage==='schedule'){buildStaffFilters();render();}
+  if(currentPage==='clients') renderClients();
+  if(currentPage==='dashboard') renderDashboard();
+  showToast(`${name} を削除しました`);
+}
+
+// ── BUILD SIDEBAR STAFF ── //
+function buildSidebarStaff(){
+  const wrap=document.getElementById('sidebarStaff');
+  wrap.innerHTML=`<div class="sidebar-staff-label" style="display:flex;align-items:center;justify-content:space-between;">
+      担当者フィルター
+      <button onclick="openStaffModal()" style="background:rgba(255,255,255,.12);border:none;color:rgba(255,255,255,.7);border-radius:5px;width:20px;height:20px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;" title="担当者を追加">+</button>
+    </div>
+    <button class="staff-chip${activeStaff==='all'?' active':''}" id="ssc-all" onclick="setStaff('all')">
+      <div class="staff-avatar" style="background:#6B7280;">全</div>全員表示
+    </button>`+
+    STAFF.map((s,i)=>`<div style="display:flex;align-items:center;gap:4px;">
+      <button class="staff-chip${activeStaff===i?' active':''}" onclick="setStaff(${i})" style="flex:1;">
+        <div class="staff-avatar" style="background:${s.color};">${s.short[0]}</div>${s.short}
+      </button>
+      <button onclick="deleteStaff(${i})" title="削除" style="background:none;border:none;color:rgba(255,255,255,.3);cursor:pointer;padding:2px 4px;font-size:12px;border-radius:4px;flex-shrink:0;" onmouseover="this.style.color='rgba(255,100,100,.8)'" onmouseout="this.style.color='rgba(255,255,255,.3)'">✕</button>
+    </div>`).join('');
+}
+
+// ── PAGE SWITCH ── //
+let currentPage='home';
+function switchPage(page){
+  currentPage=page;
+  const pages=['home','dashboard','schedule','clients','sales'];
+  const labels={'home':'ホーム','dashboard':'ダッシュボード','schedule':'スケジュール','clients':'顧問リスト','sales':'売上管理'};
+  document.querySelectorAll('.nav-item').forEach(el=>{
+    el.classList.toggle('active', el.id==='nav-'+page);
+  });
+  document.querySelectorAll('.bn-item').forEach(el=>{
+    el.classList.toggle('active', el.id==='bn-'+page);
+  });
+  closeSidebar();
+  pages.forEach(p=>{
+    const el=document.getElementById('page'+p.charAt(0).toUpperCase()+p.slice(1));
+    if(el) el.style.display=p===page?(p==='schedule'?'flex':''):'none';
+  });
+  document.getElementById('topbarTitle').textContent=labels[page]||page;
+  const isSched=page==='schedule';
+  const isClients=page==='clients';
+  document.getElementById('weekNav').style.display=isSched?'':'none';
+  document.getElementById('staffFiltersWrap').style.display=isSched?'':'none';
+  document.getElementById('legendWrap').style.display=isSched?'':'none';
+  document.getElementById('btnNew').style.display=isSched?'':'none';
+  document.getElementById('btnNewClient').style.display=isClients?'':'none';
+  document.getElementById('btnNewEvent2').style.display=isClients?'':'none';
+  if(page==='schedule'){buildStaffFilters();render();}
+  if(page==='clients') renderClients();
+  if(page==='sales')   renderSales();
+  if(page==='home')    renderHome();
+  if(page==='dashboard') renderDashboard();
+}
+
+// ── HOME ── //
+function renderHome(){
+  const cnt=clientList.length;
+  const totalMRR=clientList.reduce((s,c)=>s+(PLANS[c.plan]?.mrr||0),0);
+  const pill=document.getElementById('clientCountPill2');
+  if(pill) pill.textContent=cnt+'社';
+  const nb=document.getElementById('nbClients');
+  if(nb) nb.innerHTML=cnt+'<small>稼働中</small>';
+  const nbSched=document.getElementById('nbSched');
+  const wEnd=dateStr(addDays(weekStart,4));
+  const wCount=events.filter(e=>e.date>=dateStr(weekStart)&&e.date<=wEnd).length;
+  if(nbSched) nbSched.innerHTML=wCount+'<small>今週の予定</small>';
+  const el=id=>document.getElementById(id);
+  if(el('homeMRR')) el('homeMRR').textContent=fmt(totalMRR);
+  if(el('homeARR')) el('homeARR').textContent=fmt(totalMRR*12);
+  if(el('nbMRR')) el('nbMRR').innerHTML=fmt(totalMRR)+'<small>当月 MRR</small>';
+  if(el('nbARR')) el('nbARR').innerHTML=fmt(totalMRR*12)+'<small>ARR</small>';
+  const visitCount=events.filter(e=>e.type==='ev-visit'&&e.date.startsWith('2026-10')).length;
+  if(el('homeVisits')) el('homeVisits').textContent=visitCount+'件';
+  if(el('homeVisitsPlan')) el('homeVisitsPlan').textContent='今月の訪問';
+
+  const evBg={'ev-visit':'#DBEAFE','ev-online':'#DCFCE7','ev-chat':'#EDE9FE','ev-report':'#FEF3C7','ev-seminar':'#FFE4E6'};
+  const evFg={'ev-visit':'#1E40AF','ev-online':'#166534','ev-chat':'#4C1D95','ev-report':'#92400E','ev-seminar':'#9F1239'};
+  const sorted=[...events].sort((a,b)=>a.date>b.date?-1:1).slice(0,6);
+  document.getElementById('activityList').innerHTML=sorted.map(e=>`
+    <div class="activity-row">
+      <div class="activity-icon" style="background:${evBg[e.type]};color:${evFg[e.type]};">${TYPE_ICON[e.type]}</div>
+      <div class="activity-body"><strong>${STAFF[e.staff].short}</strong> · ${e.client}<br><span style="color:var(--fg3);font-size:11px;">${TYPE_LABEL[e.type]}</span></div>
+      <div class="activity-time">${e.date.slice(5).replace('-','/')} ${SLOTS[e.slot]}</div>
+    </div>`).join('');
+
+  const thisWeekEnd=dateStr(addDays(weekStart,4));
+  const upcoming=events.filter(e=>e.date>=dateStr(TODAY)&&e.date<=thisWeekEnd).sort((a,b)=>a.date>b.date?1:a.slot-b.slot).slice(0,6);
+  document.getElementById('upcomingList').innerHTML=upcoming.length?upcoming.map(e=>`
+    <div class="activity-row">
+      <div class="activity-icon" style="background:${evBg[e.type]};color:${evFg[e.type]};">${TYPE_ICON[e.type]}</div>
+      <div class="activity-body"><strong>${e.date.slice(5).replace('-','/')}</strong> ${SLOTS[e.slot]}<br><span style="font-size:11px;color:var(--fg3);">${e.client}</span></div>
+      <div class="activity-time" style="color:${STAFF[e.staff].color};">${STAFF[e.staff].short}</div>
+    </div>`).join(''):'<div style="color:var(--fg4);font-size:12px;padding:8px 0;">今週の予定はありません</div>';
+}
+
+// ── STAFF FILTER TABS (in topbar) ── //
+function buildStaffFilters(){
+  document.getElementById('staffFiltersWrap').innerHTML=
+    `<button class="staff-filter${activeStaff==='all'?' active':''}" onclick="setStaff('all')">全員</button>`+
+    STAFF.map((s,i)=>`<button class="staff-filter${activeStaff===i?' active':''}" onclick="setStaff(${i})" style="${activeStaff===i?`background:${s.color};border-color:${s.color};`:''}">${s.short}</button>`).join('');
+}
+function setStaff(v){activeStaff=v;buildSidebarStaff();if(currentPage==='schedule'){buildStaffFilters();render();}}
+
+// ── SCHEDULE ── //
+function render(){
+  const grid=document.getElementById('calGrid');
+  const DAYS=5; grid.style.setProperty('--day-count',DAYS);
+  const days=Array.from({length:DAYS},(_,i)=>addDays(weekStart,i));
+  document.getElementById('weekLabel').textContent=`${weekStart.getMonth()+1}/${weekStart.getDate()} – ${days[DAYS-1].getMonth()+1}/${days[DAYS-1].getDate()}`;
+  let html=`<div class="time-corner"></div>`;
+  days.forEach(d=>{
+    const dow=['日','月','火','水','木','金','土'][d.getDay()];
+    const isToday=dateStr(d)===dateStr(TODAY);
+    html+=`<div class="day-hd${isToday?' today':''}"><span class="dow">${dow}</span><span class="dom">${d.getDate()}</span></div>`;
+  });
+  SLOTS.forEach((t,si)=>{
+    html+=`<div class="time-lbl">${t.endsWith(':00')?t:''}</div>`;
+    days.forEach(d=>{
+      const ds=dateStr(d);
+      const evs=events.filter(e=>e.date===ds&&e.slot===si&&(activeStaff==='all'||e.staff===activeStaff));
+      html+=`<div class="cal-cell${si%2?' alt':''}" onclick="cellClick(event,'${ds}',${si})">`;
+      evs.forEach(e=>{
+        const h=e.dur*24-4;
+        html+=`<div class="ev ${e.type}" style="top:2px;height:${h}px;" onclick="event.stopPropagation();openDetail(${e.id})">
+          <div class="ev-time">${SLOTS[e.slot]}${activeStaff==='all'?' · '+STAFF[e.staff]?.short:''}${e.recur?' ↺':''}</div>
+          <div class="ev-name">${e.client}</div>
+        </div>`;
+      });
+      html+=`</div>`;
+    });
+  });
+  grid.innerHTML=html;
+}
+function cellClick(evt,date,slot){addSlotDate=date;addSlotTime=slot;openAddModal();}
+function moveWeek(d){weekStart=addDays(weekStart,d*7);render();}
+function goToday(){weekStart=new Date(TODAY);weekStart.setDate(TODAY.getDate()-((TODAY.getDay()+6)%7));render();}
+
+// ── ADD MODAL ── //
+function openAddModal(){
+  populateStaffSelects();
+  const clients=[...clientList.map(c=>c.name),'説明会（WARM層）'];
+  document.getElementById('a-client').innerHTML=[...new Set(clients)].map(c=>`<option>${c}</option>`).join('');
+  document.getElementById('a-start').innerHTML=SLOTS.map((t,i)=>`<option value="${i}">${t}</option>`).join('');
+  const initDate=addSlotDate||dateStr(TODAY);
+  document.getElementById('a-date').value=initDate;
+  document.getElementById('a-recur').value='none';
+  const end=addDays(TODAY,90);
+  document.getElementById('a-recur-end').value=dateStr(end);
+  if(addSlotTime!==null)document.getElementById('a-start').value=addSlotTime;
+  if(activeStaff!=='all')document.getElementById('a-staff').value=activeStaff;
+  document.getElementById('recurPreview').textContent='';
+  document.getElementById('addOverlay').hidden=false;
+  setTimeout(()=>buildDatePicker('a-date-picker','a-date',initDate),0);
+}
+function closeAdd(){document.getElementById('addOverlay').hidden=true;addSlotDate=null;addSlotTime=null;}
+
+function genRecurDates(startDate,recur,endDate){
+  const dates=[];
+  const start=new Date(startDate+'T00:00:00');
+  const end=new Date(endDate+'T00:00:00');
+  if(recur==='none') return [startDate];
+  const MAX=60;
+  let cur=new Date(start);
+  const getNthDOW=(d)=>{
+    const tmp=new Date(d); tmp.setDate(1);
+    const dow=d.getDay(); let count=0,day=0;
+    while(tmp.getMonth()===d.getMonth()){
+      if(tmp.getDay()===dow) count++;
+      if(tmp.getDate()===d.getDate()) day=count;
+      tmp.setDate(tmp.getDate()+1);
+    }
+    return {nth:day,dow};
+  };
+  const {nth,dow}=recur==='monthly-dow'?getNthDOW(start):{};
+  while(cur<=end && dates.length<MAX){
+    dates.push(dateStr(cur));
+    if(recur==='weekly') cur.setDate(cur.getDate()+7);
+    else if(recur==='biweekly') cur.setDate(cur.getDate()+14);
+    else if(recur==='monthly-date'){ cur.setMonth(cur.getMonth()+1); }
+    else if(recur==='monthly-dow'){
+      cur.setMonth(cur.getMonth()+1); cur.setDate(1);
+      let count=0;
+      while(count<nth){ if(cur.getDay()===dow) count++; if(count<nth) cur.setDate(cur.getDate()+1); }
+    }
+  }
+  return dates;
+}
+
+function updateRecurPreview(){
+  const recur=document.getElementById('a-recur').value;
+  const startDate=document.getElementById('a-date').value;
+  const endDate=document.getElementById('a-recur-end').value;
+  const wrap=document.getElementById('recurEndWrap');
+  wrap.style.opacity=recur==='none'?'0.4':'1';
+  if(recur==='none'){ document.getElementById('recurPreview').textContent=''; return; }
+  if(!startDate||!endDate){ document.getElementById('recurPreview').textContent='開始日と終了日を入力してください'; return; }
+  const dates=genRecurDates(startDate,recur,endDate);
+  const preview=dates.slice(0,4).map(d=>d.slice(5).replace('-','/')).join('、');
+  const more=dates.length>4?` … 計 ${dates.length}件`:'';
+  document.getElementById('recurPreview').textContent=`📅 ${preview}${more}`;
+}
+
+function saveEvent(){
+  const date=document.getElementById('a-date').value;
+  const slot=parseInt(document.getElementById('a-start').value);
+  const dur=parseInt(document.getElementById('a-dur').value);
+  const type=document.getElementById('a-type').value;
+  const client=document.getElementById('a-client').value;
+  const staff=parseInt(document.getElementById('a-staff').value);
+  const recur=document.getElementById('a-recur').value;
+  const endDate=document.getElementById('a-recur-end').value;
+  if(!date||!client) return;
+  const dates=genRecurDates(date,recur,recur==='none'?date:endDate);
+  const recurLabel={'none':'','weekly':'毎週','biweekly':'隔週','monthly-dow':'毎月（曜日）','monthly-date':'毎月（日付）'};
+  const seriesId=recur!=='none'?`s${nextId}`:null;
+  dates.forEach(d=>events.push({id:nextId++,staff,client,type,date:d,slot,dur,recur:recur!=='none'?recur:undefined,seriesId}));
+  closeAdd();
+  if(currentPage==='schedule') render();
+  if(currentPage==='dashboard') renderDashboard();
+  if(currentPage==='home') renderHome();
+  const msg=dates.length>1?`${dates.length}件登録（${recurLabel[recur]}）: ${client}`:`${date.slice(5).replace('-','/')} ${SLOTS[slot]} — ${client} を登録しました`;
+  showToast(msg);
+}
+
+// ── DETAIL ── //
+function openDetail(id){
+  const e=events.find(x=>x.id===id);if(!e)return;
+  detEventId=id;
+  const dp=e.date.split('-'),dObj=new Date(+dp[0],+dp[1]-1,+dp[2]);
+  const dow=['日','月','火','水','木','金','土'][dObj.getDay()];
+  const tBg={'ev-visit':'#DBEAFE','ev-online':'#DCFCE7','ev-chat':'#EDE9FE','ev-report':'#FEF3C7','ev-seminar':'#FFE4E6'};
+  const tFg={'ev-visit':'#1E40AF','ev-online':'#166534','ev-chat':'#4C1D95','ev-report':'#92400E','ev-seminar':'#9F1239'};
+  document.getElementById('detHeader').style.background=tBg[e.type];
+  document.getElementById('detHeader').innerHTML=`<div style="font-size:10px;font-weight:700;color:${tFg[e.type]};">${TYPE_LABEL[e.type]}</div><div style="font-size:16px;font-weight:700;color:var(--fg);margin-top:2px;">${e.client}</div>`;
+  const endTime=SLOTS[Math.min(e.slot+e.dur,SLOTS.length-1)]||'21:00';
+  const recurLabel={'weekly':'毎週','biweekly':'隔週','monthly-dow':'毎月（曜日）','monthly-date':'毎月（日付）'};
+  const seriesCount=e.seriesId?events.filter(x=>x.seriesId===e.seriesId).length:0;
+  document.getElementById('detBody').innerHTML=`
+    <div class="ev-det-row"><span class="ev-det-label">日時</span><span>${dp[1]}月${dp[2]}日（${dow}）${SLOTS[e.slot]} – ${endTime}</span></div>
+    <div class="ev-det-row"><span class="ev-det-label">担当者</span><span style="font-weight:600;color:${STAFF[e.staff].color};">${STAFF[e.staff].name}</span></div>
+    <div class="ev-det-row"><span class="ev-det-label">役割</span><span style="color:var(--fg3);">${STAFF[e.staff].role}</span></div>
+    ${e.recur?`<div class="ev-det-row"><span class="ev-det-label">繰り返し</span><span class="pill blue" style="font-size:10px;">↺ ${recurLabel[e.recur]} · 全${seriesCount}件</span></div>`:''}`;
+  const seriesBtn=document.getElementById('detSeriesBtn');
+  if(seriesBtn) seriesBtn.style.display=e.seriesId?'':'none';
+  document.getElementById('detOverlay').hidden=false;
+}
+function closeDet(){document.getElementById('detOverlay').hidden=true;detEventId=null;}
+function deleteEvent(){events=events.filter(e=>e.id!==detEventId);closeDet();if(currentPage==='schedule')render();showToast('予定を削除しました');}
+function deleteSeriesEvent(){
+  const e=events.find(x=>x.id===detEventId);
+  if(e?.seriesId) events=events.filter(x=>x.seriesId!==e.seriesId);
+  else events=events.filter(x=>x.id!==detEventId);
+  closeDet();if(currentPage==='schedule')render();
+  showToast('シリーズの予定をすべて削除しました');
+}
+
+// ── CLIENTS ── //
+function renderClients(){
+  const meta=document.getElementById('clientsMeta');
+  if(meta) meta.textContent=`担当者別クライアント一覧 · 合計 ${clientList.length}社`;
+  let html='';
+  STAFF.forEach((s,si)=>{
+    const myC=clientList.filter(c=>c.staff===si);
+    const mrr=myC.reduce((sum,c)=>sum+(PLANS[c.plan]?.mrr||0),0);
+    html+=`<div class="card" style="margin-bottom:12px;">
+      <div class="section-hd">
+        <span class="section-hd-title"><span class="staff-dot" style="background:${s.color};"></span>${s.name} <span style="color:var(--fg4);font-weight:400;font-size:11px;">${s.role}</span></span>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:11px;color:var(--fg3);">MRR <strong style="font-family:var(--mono);color:var(--fg);">${fmt(mrr)}</strong></span>
+          <span class="section-count">${myC.length}社</span>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="dt">
+          <thead><tr><th>クライアント名</th><th>プラン</th><th>業種</th><th>契約開始</th><th class="num">MRR</th><th>次回予定</th><th>メモ</th><th></th></tr></thead>
+          <tbody>`;
+    myC.forEach(c=>{
+      const plan=PLANS[c.plan];
+      const nextEv=events.filter(e=>e.staff===si&&e.client===c.name&&e.date>=dateStr(TODAY)).sort((a,b)=>a.date>b.date?1:-1)[0];
+      const nextLabel=nextEv?`${nextEv.date.slice(5).replace('-','/')} ${TYPE_LABEL[nextEv.type]}`:(c.nextVisit?`${c.nextVisit.slice(5).replace('-','/')} 予定`:'未定');
+      html+=`<tr>
+        <td class="link-cell" onclick="openClientModal(${c.id})" style="cursor:pointer;">${c.name}</td>
+        <td><span class="pill" style="background:${plan.bg};color:${plan.color};">${plan.label}</span></td>
+        <td>${c.industry}</td>
+        <td style="font-family:var(--mono);font-size:11px;">${c.since}</td>
+        <td class="num">${PLANS[c.plan]?.mrr>0?fmt(PLANS[c.plan].mrr):'—'}</td>
+        <td style="font-size:11px;color:var(--fg2);">${nextLabel}</td>
+        <td style="font-size:11px;color:var(--fg3);max-width:140px;">${c.memo}</td>
+        <td style="white-space:nowrap;">
+          <div class="row-actions">
+            <button class="row-btn edit" title="編集" onclick="openClientModal(${c.id})">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </button>
+            <button class="row-btn del" title="削除" onclick="confirmDeleteClient(${c.id})">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>
+            </button>
+          </div>
+        </td>
+      </tr>`;
+    });
+    html+=`</tbody></table></div></div>`;
+  });
+  document.getElementById('clientsInner').innerHTML=html;
+}
+
+// ── SALES ── //
+function renderSales(){
+  const totalMRR=clientList.reduce((s,c)=>s+(PLANS[c.plan]?.mrr||0),0);
+  const prevMRR=0,diff=totalMRR-prevMRR;
+  const staffMRR=STAFF.map((_,i)=>clientList.filter(c=>c.staff===i).reduce((s,c)=>s+(PLANS[c.plan]?.mrr||0),0));
+  const maxStaffMRR=Math.max(...staffMRR);
+  const planCounts={light:0,standard:0,project:0};
+  clientList.forEach(c=>{planCounts[c.plan]=(planCounts[c.plan]||0)+1;});
+
+  const W=300,H=100,PL=8,PR=8,PT=12,PB=22;
+  let trendSVG='<div style="color:var(--fg4);font-size:12px;padding:20px 0;text-align:center;">MRR履歴データなし</div>';
+  if(MRR_HISTORY.length>=2){
+    const maxMRR=Math.max(...MRR_HISTORY.map(m=>m.mrr));
+    const pts=MRR_HISTORY.map((m,i)=>{
+      const x=PL+i*(W-PL-PR)/(MRR_HISTORY.length-1);
+      const y=PT+(1-m.mrr/maxMRR)*(H-PT-PB);
+      return `${x},${y}`;
+    });
+    const areaPath=`M ${pts[0]} L ${pts.join(' L ')} L ${pts[pts.length-1].split(',')[0]},${H-PB} L ${PL},${H-PB} Z`;
+    trendSVG=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:110px;display:block;">
+      <defs><linearGradient id="tg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#4A7BF5" stop-opacity=".22"/><stop offset="100%" stop-color="#4A7BF5" stop-opacity=".02"/></linearGradient></defs>
+      <path d="${areaPath}" fill="url(#tg)"/>
+      <polyline points="${pts.join(' ')}" fill="none" stroke="#4A7BF5" stroke-width="2.5" stroke-linejoin="round"/>
+      ${MRR_HISTORY.map((m,i)=>{
+        const x=PL+i*(W-PL-PR)/(MRR_HISTORY.length-1);
+        const y=PT+(1-m.mrr/maxMRR)*(H-PT-PB);
+        return `<circle cx="${x}" cy="${y}" r="3.5" fill="#4A7BF5" stroke="#fff" stroke-width="2"/>
+          <text x="${x}" y="${H-5}" text-anchor="middle" font-size="8" fill="#6B7280">${m.month}</text>`;
+      }).join('')}
+    </svg>`;
+  }
+
+  const monthData=[
+  ];
+
+  document.getElementById('salesInner').innerHTML=`
+  <div class="obj-header">
+    <div class="obj-icon" style="background:var(--amb-bg);color:var(--amb);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="18" y="3" width="4" height="18" rx="1"/><rect x="10" y="8" width="4" height="13" rx="1"/><rect x="2" y="13" width="4" height="8" rx="1"/></svg></div>
+    <div class="obj-meta"><div class="obj-label">Revenue Management</div><div class="obj-name">売上管理</div><div class="obj-sub">2026年10月現在 · AI伴走サービス</div></div>
+    <div class="obj-badges"><span class="pill green">MRR ${fmt(totalMRR)}</span><span class="pill blue">▲ ${fmt(diff)} 前月比</span></div>
+  </div>
+
+  <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:16px;">
+    <div class="kpi-card blue"><div class="kpi-label">当月 MRR</div><div class="kpi-value" style="color:var(--primary);">${fmt(totalMRR)}</div><div class="kpi-diff"><span class="up">▲ ${fmt(diff)}</span>&nbsp;前月比</div></div>
+    <div class="kpi-card green"><div class="kpi-label">ARR（年間換算）</div><div class="kpi-value">${fmt(totalMRR*12)}</div><div class="kpi-diff"><span class="up">▲ ${fmt(diff*12)}</span></div></div>
+    <div class="kpi-card amber"><div class="kpi-label">ARPU / 社</div><div class="kpi-value">${fmt(Math.round(totalMRR/clientList.length))}</div><div class="kpi-diff">月額平均</div></div>
+    <div class="kpi-card purple"><div class="kpi-label">稼働クライアント</div><div class="kpi-value">${clientList.length}社</div><div class="kpi-diff">目標 15社</div></div>
+  </div>
+
+  <div class="sales-grid">
+    <div class="card"><div class="card-header"><span class="card-title">MRR 推移（6ヶ月）</span></div><div class="card-body">${trendSVG}</div></div>
+    <div class="card"><div class="card-header"><span class="card-title">プラン別 構成</span></div>
+      <div class="card-body">
+        ${['standard','light','project'].map(pk=>{
+          const p=PLANS[pk];const cnt=planCounts[pk]||0;const mrr=cnt*p.mrr;
+          const pct=totalMRR>0?Math.round(mrr/totalMRR*100):0;
+          return `<div class="plan-row">
+            <div class="plan-swatch" style="background:${p.color};"></div>
+            <div class="plan-name">${p.label}</div>
+            <span style="font-size:11px;color:var(--fg3);width:28px;text-align:right;">${cnt}社</span>
+            <div class="plan-track" style="flex:1;"><div class="plan-fill" style="width:${pct}%;background:${p.color};"></div></div>
+            <span class="plan-mrr" style="color:${p.color};">${mrr>0?fmt(mrr):'—'}</span>
+          </div>`;
+        }).join('')}
+        <div style="font-size:10px;color:var(--fg4);margin-top:8px;">※ プロジェクト型はスポット契約</div>
+      </div>
+    </div>
+    <div class="card"><div class="card-header"><span class="card-title">担当者別 MRR</span></div>
+      <div class="card-body">
+        ${STAFF.map((s,i)=>{
+          const mrr=staffMRR[i];const pct=maxStaffMRR>0?Math.round(mrr/maxStaffMRR*100):0;
+          const cnt=clientList.filter(c=>c.staff===i).length;
+          return `<div class="hbar-row">
+            <div class="hbar-label">${s.name}</div>
+            <div class="hbar-track"><div class="hbar-fill" style="width:${pct}%;background:${s.color};"><span>${fmt(mrr)}</span></div></div>
+            <div class="hbar-val">${cnt}社</div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+    <div class="card"><div class="card-header"><span class="card-title">クライアント別 MRR</span></div>
+      <div class="card-body">
+        ${clientList.filter(c=>PLANS[c.plan]?.mrr>0).sort((a,b)=>(PLANS[b.plan]?.mrr||0)-(PLANS[a.plan]?.mrr||0)).map(c=>{
+          const mrr=PLANS[c.plan]?.mrr||0;const pct=Math.round(mrr/300000*100);
+          return `<div class="hbar-row">
+            <div class="hbar-label" title="${c.name}">${c.name}</div>
+            <div class="hbar-track"><div class="hbar-fill" style="width:${pct}%;background:${PLANS[c.plan]?.color};"><span>${fmt(mrr)}</span></div></div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header" style="padding:14px 18px 8px;"><span class="card-title">月次レポート</span><span class="section-count">${monthData.length}件</span></div>
+    <div class="table-wrap">
+      <table class="dt">
+        <thead><tr><th>月</th><th>新規獲得</th><th>解約</th><th>MRR</th><th>前月差</th><th class="num">当月売上</th><th class="center">ステータス</th></tr></thead>
+        <tbody>
+          ${monthData.map((m,i)=>{
+            const prev=i>0?monthData[i-1].mrr:null;
+            const mrrDiff=prev!=null?m.mrr-prev:null;
+            const isThis=m.month==='2026-10';
+            return `<tr style="${isThis?'background:var(--primary-bg);font-weight:600;':''}">
+              <td style="font-family:var(--mono);font-size:11px;">${m.month.replace('-','年')}月${m.note||''}</td>
+              <td style="color:var(--grn);font-weight:700;">${m.new>0?'+'+m.new+'社':'—'}</td>
+              <td style="color:var(--red);">${m.churn>0?'-'+m.churn+'社':'—'}</td>
+              <td style="font-family:var(--mono);font-size:11px;">${fmt(m.mrr)}</td>
+              <td style="font-family:var(--mono);font-size:11px;color:${mrrDiff>0?'var(--grn)':mrrDiff<0?'var(--red)':'var(--fg3)'};">${mrrDiff!=null?(mrrDiff>0?'▲ ':'▼ ')+fmt(Math.abs(mrrDiff)):'—'}</td>
+              <td class="num">${fmt(m.revenue)}</td>
+              <td class="center"><span class="pill ${isThis?'blue':'green'}">${isThis?'進行中':'確定'}</span></td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>
+  </div>`;
+}
+
+// ── DASHBOARD ── //
+function renderDashboard(){
+  const totalMRR=clientList.reduce((s,c)=>s+(PLANS[c.plan]?.mrr||0),0);
+  const prevMRR=0,diff=totalMRR-prevMRR;
+  const staffMRR=STAFF.map((_,i)=>clientList.filter(c=>c.staff===i).reduce((s,c)=>s+(PLANS[c.plan]?.mrr||0),0));
+  const planCounts={light:0,standard:0,project:0};
+  clientList.forEach(c=>planCounts[c.plan]=(planCounts[c.plan]||0)+1);
+
+  const W=500,H=140,PL=46,PR=16,PT=14,PB=28;
+  let mrrSVG='<div style="color:var(--fg4);font-size:12px;padding:40px 0;text-align:center;">MRR履歴データなし</div>';
+  if(MRR_HISTORY.length>=2){
+    const maxMRR=Math.max(...MRR_HISTORY.map(m=>m.mrr),1);
+    const pts=MRR_HISTORY.map((m,i)=>{
+      const x=PL+i*(W-PL-PR)/(MRR_HISTORY.length-1);
+      const y=PT+(1-m.mrr/maxMRR)*(H-PT-PB);
+      return [x,y];
+    });
+    const areaPath=`M ${pts[0][0]},${pts[0][1]} ${pts.map(p=>`L ${p[0]},${p[1]}`).join(' ')} L ${pts[pts.length-1][0]},${H-PB} L ${pts[0][0]},${H-PB} Z`;
+    const yTicks=[0,Math.round(maxMRR/2),maxMRR];
+    mrrSVG=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:150px;display:block;">
+      <defs><linearGradient id="mg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#4A7BF5" stop-opacity=".22"/><stop offset="100%" stop-color="#4A7BF5" stop-opacity=".02"/></linearGradient></defs>
+      ${yTicks.map(v=>{const y=PT+(1-v/maxMRR)*(H-PT-PB);
+        return `<line x1="${PL}" y1="${y}" x2="${W-PR}" y2="${y}" stroke="#E4E9F5" stroke-width="1"/>
+          <text x="${PL-4}" y="${y+3}" text-anchor="end" font-size="8" fill="#A0ABBA">${v===0?'0':v>=1000000?'¥'+(v/1000000)+'M':'¥'+(v/10000)+'万'}</text>`;
+      }).join('')}
+      <path d="${areaPath}" fill="url(#mg)"/>
+      <polyline points="${pts.map(p=>p.join(',')).join(' ')}" fill="none" stroke="#4A7BF5" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+      ${pts.map((p,i)=>`<circle cx="${p[0]}" cy="${p[1]}" r="4" fill="#4A7BF5" stroke="#fff" stroke-width="2"/>
+        <text x="${p[0]}" y="${H-8}" text-anchor="middle" font-size="8.5" fill="#6B7280">${MRR_HISTORY[i].month}</text>`).join('')}
+    </svg>`;
+  }
+
+  const planPct=[
+    {label:'スタンダード',val:planCounts.standard,color:'#4A7BF5'},
+    {label:'ライト',val:planCounts.light,color:'#6366F1'},
+    {label:'PJT型',val:planCounts.project,color:'#8B5CF6'},
+  ];
+  const total=clientList.length;
+  let cumAngle=0;
+  const r=40,cx=60,cy=55,stroke=14;
+  const arcs=planPct.map(p=>{
+    const angle=(p.val/total)*2*Math.PI;
+    const x1=cx+r*Math.cos(cumAngle-Math.PI/2),y1=cy+r*Math.sin(cumAngle-Math.PI/2);
+    cumAngle+=angle;
+    const x2=cx+r*Math.cos(cumAngle-Math.PI/2),y2=cy+r*Math.sin(cumAngle-Math.PI/2);
+    const large=angle>Math.PI?1:0;
+    return {d:`M ${x1} ${y1} A ${r} ${r} 0 ${large} 1 ${x2} ${y2}`,color:p.color,label:p.label,val:p.val};
+  });
+  const donutSVG=`<svg viewBox="0 0 170 110" style="width:100%;height:110px;">
+    ${arcs.map(a=>`<path d="${a.d}" fill="none" stroke="${a.color}" stroke-width="${stroke}" stroke-linecap="butt"/>`).join('')}
+    <text x="${cx}" y="${cy-4}" text-anchor="middle" font-size="14" font-weight="700" fill="#1A1D2E">${total}</text>
+    <text x="${cx}" y="${cy+10}" text-anchor="middle" font-size="8" fill="#6B7280">社</text>
+    ${planPct.map((p,i)=>`
+      <rect x="126" y="${12+i*22}" width="9" height="9" rx="2" fill="${p.color}"/>
+      <text x="138" y="${20+i*22}" font-size="9" fill="#3D4466">${p.label}</text>
+      <text x="138" y="${30+i*22}" font-size="8" fill="#6B7280">${p.val}社</text>`).join('')}
+  </svg>`;
+
+  const wEnd=dateStr(addDays(weekStart,4));
+  const wStart=dateStr(weekStart);
+  const evCols={'ev-visit':'#3B82F6','ev-online':'#22C55E','ev-chat':'#8B5CF6','ev-report':'#F59E0B','ev-seminar':'#F43F5E'};
+  const staffActivity=STAFF.map((_,i)=>{
+    const wkEvs=events.filter(e=>e.staff===i&&e.date>=wStart&&e.date<=wEnd);
+    const byType={};
+    wkEvs.forEach(e=>byType[e.type]=(byType[e.type]||0)+1);
+    return {total:wkEvs.length,byType};
+  });
+
+  const healthRows=clientList.map(c=>{
+    const daysAgo=Math.floor((TODAY-new Date(c.since+'-01'))/(1000*60*60*24*30));
+    const evCount=events.filter(e=>e.client===c.name).length;
+    const hasNext=events.find(e=>e.client===c.name&&e.date>=dateStr(TODAY));
+    const health=evCount>=3&&hasNext?'good':evCount>=1?'warn':'risk';
+    return {...c,daysAgo,evCount,hasNext,health};
+  });
+
+  document.getElementById('dashInner').innerHTML=`
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+    <div><div style="font-size:20px;font-weight:700;">ダッシュボード</div><div style="font-size:12px;color:var(--fg3);margin-top:2px;">2026年10月 · AI BUDDY 事業KPI</div></div>
+    <span class="pill blue">最終更新: 10/9 09:00</span>
+  </div>
+
+  <div class="kpi-grid" style="grid-template-columns:repeat(5,1fr);margin-bottom:16px;">
+    <div class="kpi-card blue"><div class="kpi-label">MRR</div><div class="kpi-value" style="color:var(--primary);">${fmt(totalMRR)}</div><div class="kpi-diff"><span class="up">▲ ${fmt(diff)}</span> 前月比</div></div>
+    <div class="kpi-card green"><div class="kpi-label">ARR</div><div class="kpi-value">${fmt(totalMRR*12)}</div><div class="kpi-diff">年間換算</div></div>
+    <div class="kpi-card amber"><div class="kpi-label">稼働クライアント</div><div class="kpi-value">${clientList.length}<span style="font-size:12px;">社</span></div><div class="kpi-diff">目標 15社</div></div>
+    <div class="kpi-card purple"><div class="kpi-label">ARPU</div><div class="kpi-value">${fmt(Math.round(totalMRR/clientList.length))}</div><div class="kpi-diff">/ 社・月</div></div>
+    <div class="kpi-card red"><div class="kpi-label">今週アクション</div><div class="kpi-value">${events.filter(e=>e.date>=dateStr(weekStart)&&e.date<=dateStr(addDays(weekStart,4))).length}<span style="font-size:12px;">件</span></div><div class="kpi-diff">訪問+MTG+報告</div></div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-bottom:12px;">
+    <div class="card" style="grid-column:span 2 / auto;min-width:0;"><div class="card-header"><span class="card-title">MRR 推移</span><span style="font-family:var(--mono);font-size:11px;color:var(--primary);">${fmt(totalMRR)}</span></div><div class="card-body">${mrrSVG}</div></div>
+    <div class="card"><div class="card-header"><span class="card-title">プラン 構成比</span></div><div class="card-body" style="padding:8px;">${donutSVG}</div></div>
+    <div class="card"><div class="card-header"><span class="card-title">担当者別 MRR</span></div>
+      <div class="card-body">
+        ${STAFF.map((s,i)=>{const mrr=staffMRR[i];const pct=Math.round(mrr/totalMRR*100);
+          return `<div style="margin-bottom:10px;">
+            <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px;">
+              <span style="font-weight:600;color:${s.color};">${s.name}</span>
+              <span style="font-family:var(--mono);color:var(--fg2);">${pct}%</span>
+            </div>
+            <div style="height:8px;background:var(--page-bg);border-radius:4px;overflow:hidden;">
+              <div style="height:100%;width:${pct}%;background:${s.color};border-radius:4px;"></div>
+            </div>
+            <div style="font-family:var(--mono);font-size:10px;color:var(--fg3);margin-top:2px;">${fmt(mrr)}</div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:12px;">
+    <div class="card"><div class="card-header"><span class="card-title">今週のアクティビティ</span></div>
+      <div class="card-body">
+        ${STAFF.map((s,i)=>{const act=staffActivity[i];
+          return `<div style="padding:8px 0;border-bottom:1px solid var(--border);">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;">
+              <span style="font-size:12px;font-weight:600;color:${s.color};">${s.name}</span>
+              <span style="font-family:var(--mono);font-size:13px;font-weight:700;">${act.total}件</span>
+            </div>
+            <div style="display:flex;gap:4px;flex-wrap:wrap;">
+              ${Object.entries(act.byType).map(([type,cnt])=>`<span style="font-size:9px;padding:1px 7px;border-radius:10px;background:${evCols[type]}22;color:${evCols[type]};font-weight:600;">${TYPE_LABEL[type]} ${cnt}</span>`).join('')}
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+    <div class="card"><div class="card-header"><span class="card-title">ヘルス状況</span>
+        <div style="display:flex;gap:4px;">
+          <span class="pill green">${healthRows.filter(r=>r.health==='good').length}</span>
+          <span class="pill amber">${healthRows.filter(r=>r.health==='warn').length}</span>
+          <span class="pill red">${healthRows.filter(r=>r.health==='risk').length}</span>
+        </div>
+      </div>
+      <div class="card-body">
+        ${healthRows.map(c=>{
+          const hLabel={good:'良好',warn:'要注意',risk:'要フォロー'}[c.health];
+          const hCls={good:'green',warn:'amber',risk:'red'}[c.health];
+          return `<div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);">
+            <span style="font-size:12px;font-weight:600;max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${c.name}</span>
+            <span class="pill ${hCls}" style="font-size:10px;">${hLabel}</span>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">クライアント ヘルスチェック</span>
+      <div style="display:flex;gap:6px;">
+        <span class="pill green">良好 ${healthRows.filter(r=>r.health==='good').length}</span>
+        <span class="pill amber">要注意 ${healthRows.filter(r=>r.health==='warn').length}</span>
+        <span class="pill red">要フォロー ${healthRows.filter(r=>r.health==='risk').length}</span>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table class="dt">
+        <thead><tr><th>クライアント</th><th>担当</th><th>プラン</th><th class="num">MRR</th><th>契約月数</th><th>対応件数</th><th>次回予定</th><th class="center">ヘルス</th></tr></thead>
+        <tbody>
+          ${healthRows.map(c=>{
+            const plan=PLANS[c.plan];const s=STAFF[c.staff];
+            const hLabel={good:'良好',warn:'要注意',risk:'要フォロー'}[c.health];
+            const hCls={good:'green',warn:'amber',risk:'red'}[c.health];
+            const nextLabel=c.hasNext?`${c.hasNext.date.slice(5).replace('-','/')} ${TYPE_LABEL[c.hasNext.type]}`:(c.nextVisit?`${c.nextVisit.slice(5).replace('-','/')} 予定`:'未定');
+            return `<tr>
+              <td class="link-cell">${c.name}</td>
+              <td><span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;"><span style="width:7px;height:7px;border-radius:50%;background:${s.color};display:inline-block;"></span>${s.short}</span></td>
+              <td><span class="pill" style="background:${plan.bg};color:${plan.color};">${plan.label}</span></td>
+              <td class="num">${PLANS[c.plan]?.mrr>0?fmt(PLANS[c.plan].mrr):'—'}</td>
+              <td style="font-family:var(--mono);font-size:11px;">${c.daysAgo}ヶ月</td>
+              <td style="font-family:var(--mono);font-size:11px;text-align:center;">${c.evCount}件</td>
+              <td style="font-size:11px;color:var(--fg3);">${nextLabel}</td>
+              <td class="center"><span class="pill ${hCls}">${hLabel}</span></td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>
+  </div>`;
+}
+
+// ── CLIENT MODAL ── //
+let nextClientId=100;
+let editClientId=null;
+
+function openClientModal(id=null){
+  editClientId=id;
+  const isEdit=id!==null;
+  const hdr=document.getElementById('clientModalHeader');
+  const btn=document.getElementById('clientSaveBtn');
+  if(hdr) hdr.childNodes[0].textContent=isEdit?'顧客を編集 ':'お客様を登録 ';
+  if(btn) btn.textContent=isEdit?'保存する':'登録する';
+
+  populateStaffSelects();
+
+  if(isEdit){
+    const c=clientList.find(x=>x.id===id);
+    if(!c) return;
+    document.getElementById('cl-name').value=c.name;
+    document.getElementById('cl-plan').value=c.plan;
+    document.getElementById('cl-industry').value=c.industry;
+    document.getElementById('cl-since').value=c.since;
+    document.getElementById('cl-memo').value=c.memo||'';
+    setTimeout(()=>{
+      document.getElementById('cl-staff').value=c.staff;
+      buildDatePicker('cl-next-picker','cl-next',c.nextVisit||dateStr(TODAY));
+    },0);
+  } else {
+    document.getElementById('cl-name').value='';
+    document.getElementById('cl-plan').value='light';
+    document.getElementById('cl-industry').value='';
+    document.getElementById('cl-since').value=`${TODAY.getFullYear()}-${String(TODAY.getMonth()+1).padStart(2,'0')}`;
+    document.getElementById('cl-memo').value='';
+    setTimeout(()=>buildDatePicker('cl-next-picker','cl-next',dateStr(TODAY)),0);
+  }
+  document.getElementById('cl-err').style.display='none';
+  document.getElementById('clientOverlay').hidden=false;
+}
+
+function closeClientModal(){document.getElementById('clientOverlay').hidden=true;editClientId=null;}
+
+function saveClient(){
+  const name=document.getElementById('cl-name').value.trim();
+  if(!name){document.getElementById('cl-err').style.display='';return;}
+  const staff=parseInt(document.getElementById('cl-staff').value);
+  const plan=document.getElementById('cl-plan').value;
+  const industry=document.getElementById('cl-industry').value.trim()||'未分類';
+  const since=document.getElementById('cl-since').value||`${TODAY.getFullYear()}-${String(TODAY.getMonth()+1).padStart(2,'0')}`;
+  const nextVisit=document.getElementById('cl-next').value||dateStr(TODAY);
+  const memo=document.getElementById('cl-memo').value.trim();
+
+  if(editClientId!==null){
+    const idx=clientList.findIndex(x=>x.id===editClientId);
+    if(idx>=0) clientList[idx]={...clientList[idx],name,staff,plan,industry,since,nextVisit,memo};
+    closeClientModal();
+    showToast(`${name} を更新しました`);
+  } else {
+    clientList.push({id:nextClientId++,name,staff,plan,industry,since,nextVisit,memo});
+    closeClientModal();
+    showToast(`${name} を登録しました`);
+  }
+  if(currentPage==='clients') renderClients();
+  if(currentPage==='dashboard') renderDashboard();
+  if(currentPage==='home') renderHome();
+}
+
+// ── DELETE CLIENT ── //
+let deleteTargetId=null;
+function confirmDeleteClient(id){
+  deleteTargetId=id;
+  const c=clientList.find(x=>x.id===id);
+  if(!c) return;
+  document.getElementById('dcbName').textContent=`「${c.name}」を削除しますか？`;
+  document.getElementById('deleteConfirmBar').classList.add('open');
+}
+function cancelDeleteClient(){
+  deleteTargetId=null;
+  document.getElementById('deleteConfirmBar').classList.remove('open');
+}
+function execDeleteClient(){
+  const c=clientList.find(x=>x.id===deleteTargetId);
+  const name=c?c.name:'顧客';
+  const idx=clientList.findIndex(x=>x.id===deleteTargetId);
+  if(idx>=0) clientList.splice(idx,1);
+  cancelDeleteClient();
+  showToast(`${name} を削除しました`);
+  if(currentPage==='clients') renderClients();
+  if(currentPage==='dashboard') renderDashboard();
+  if(currentPage==='home') renderHome();
+}
+
+// ── TOAST ── //
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.style.opacity='1';
+  setTimeout(()=>{t.style.opacity='0';},3200);
+}
+
+// ── INIT ── //
+populateStaffSelects();
+buildSidebarStaff();
+renderHome();
+</script>
