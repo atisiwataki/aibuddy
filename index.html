@@ -1,3 +1,8 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>AI BUDDY 管理ポータル</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap">
 <style>
@@ -33,6 +38,7 @@
   color-scheme: light;
 }
 *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+[hidden] { display: none !important; }
 html,body { height: 100%; font-family: var(--font); color: var(--fg); background: var(--page-bg); font-size: 13px; overflow: hidden; }
 
 /* ── LAYOUT ── */
@@ -711,6 +717,8 @@ tr:hover .row-actions { opacity: 1; }
   .modal-row { grid-template-columns: 1fr; }
 }
 </style>
+</head>
+<body>
 
 <!-- ════════ LAYOUT ════════ -->
 <div class="app">
@@ -1872,3 +1880,4 @@ populateStaffSelects();
 buildSidebarStaff();
 renderHome();
 </script>
+</body></html>
