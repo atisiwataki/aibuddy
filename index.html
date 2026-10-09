@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>AI BUDDY 管理ポータル</title>
+<link rel="icon" type="image/png" href="assets/logo-mark.png">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap">
 <style>
 :root {
@@ -63,17 +64,19 @@ html,body { height: 100%; font-family: var(--font); color: var(--fg); background
   border-bottom: 1px solid rgba(255,255,255,.08);
 }
 .sidebar-logo-icon {
-  width: 34px;
-  height: 34px;
+  width: 36px;
+  height: 36px;
   border-radius: 9px;
-  background: linear-gradient(135deg, #4A7BF5 0%, #7B9EFF 100%);
+  background: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 17px;
+  padding: 5px;
   flex-shrink: 0;
 }
-.sidebar-logo-text { color: #fff; font-weight: 700; font-size: 14px; line-height: 1.2; }
+.sidebar-logo-icon img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.sidebar-logo-text { display: block; margin-bottom: 4px; }
+.sidebar-logo-text img { height: 13px; width: auto; display: block; filter: brightness(0) invert(1); }
 .sidebar-logo-sub  { color: rgba(255,255,255,.45); font-size: 10px; font-weight: 400; }
 
 .sidebar-nav { padding: 12px 10px; flex: 1; overflow-y: auto; }
@@ -716,6 +719,157 @@ tr:hover .row-actions { opacity: 1; }
   .modal { margin: 0 8px; }
   .modal-row { grid-template-columns: 1fr; }
 }
+
+/* ════════ GLASS THEME（左ナビ以外）════════ */
+.content, .overlay, .bottom-nav, #deleteConfirmBar, #toast {
+  --primary:      #6366F1;
+  --primary-dark: #4F46E5;
+  --primary-bg:   rgba(99,102,241,.10);
+  --border:       rgba(120,120,200,.14);
+  --border-2:     rgba(120,120,200,.22);
+  --page-bg:      rgba(238,240,255,.65);
+  --fg:           #1E1B4B;
+  --fg2:          #3F3D6B;
+  --fg3:          #6E6B94;
+  --fg4:          #A3A1C2;
+  --glass:        rgba(255,255,255,.58);
+  --glass-strong: rgba(255,255,255,.82);
+  --glass-border: rgba(255,255,255,.75);
+  --glass-shadow: 0 8px 32px rgba(99,102,241,.10), 0 1px 2px rgba(30,27,75,.04);
+  --accent-grad:  linear-gradient(135deg,#6366F1 0%,#8B5CF6 55%,#C084FC 100%);
+}
+.content {
+  position: relative;
+  background:
+    radial-gradient(900px 500px at 8% -10%, rgba(165,180,252,.55), transparent 60%),
+    radial-gradient(700px 500px at 100% 0%, rgba(216,180,254,.50), transparent 60%),
+    radial-gradient(800px 600px at 60% 110%, rgba(186,230,253,.55), transparent 60%),
+    radial-gradient(600px 400px at 0% 100%, rgba(251,207,232,.45), transparent 60%),
+    linear-gradient(180deg,#F3F2FF 0%,#EEF1FF 100%);
+}
+
+/* top bar */
+.content .topbar {
+  height: 64px;
+  background: rgba(255,255,255,.45);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  border-bottom: 1px solid var(--glass-border);
+  padding: 0 24px;
+}
+.content .topbar-title { font-size: 16px; letter-spacing: -.01em; }
+.content .topbar-btn { height: 36px; border-radius: 12px; }
+.content .topbar-btn.primary { background: var(--accent-grad); box-shadow: 0 6px 16px rgba(99,102,241,.30); }
+.content .topbar-btn.primary:hover { filter: brightness(1.05); background: var(--accent-grad); }
+.content .topbar-btn.secondary { background: var(--glass-strong); border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow); }
+.content .topbar-avatar { width: 38px; height: 38px; background: var(--accent-grad); box-shadow: 0 4px 12px rgba(99,102,241,.35); border: 2px solid #fff; }
+.content .wbtn, .content .btn-today, .content .staff-filter { background: var(--glass-strong); border-color: var(--glass-border); border-radius: 10px; }
+.content .staff-filter { border-radius: 20px; }
+.content .staff-filter.active { background: var(--accent-grad); border-color: transparent; color: #fff; }
+
+/* page body */
+.content .page-body { padding: 24px; }
+
+/* glass cards */
+.content .card, .content .kpi-card, .content .nav-banner, .content .obj-header {
+  background: var(--glass);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  box-shadow: var(--glass-shadow);
+}
+.content .card-header { padding: 18px 20px 0; }
+.content .card-title { font-size: 14px; }
+.content .card-body { padding: 16px 20px; }
+
+/* KPI */
+.content .kpi-grid { gap: 16px; }
+.content .kpi-card { border-left: 1px solid var(--glass-border); padding: 18px 20px; position: relative; }
+.content .kpi-label { text-transform: none; letter-spacing: 0; font-size: 12px; font-weight: 500; color: var(--fg3); }
+.content .kpi-value { font-size: 26px; letter-spacing: -.02em; margin: 6px 0 8px; color: var(--fg) !important; }
+.content .kpi-diff .up, .content .kpi-diff .dn { display: inline-flex; align-items: center; padding: 1px 8px; border-radius: 20px; font-size: 11px; }
+.content .kpi-diff .up { background: rgba(22,163,74,.12); }
+.content .kpi-diff .dn { background: rgba(220,38,38,.12); }
+.kpi-ico { width: 38px; height: 38px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #fff; margin-bottom: 12px; box-shadow: 0 6px 14px rgba(99,102,241,.25); }
+.kpi-ico svg { width: 19px; height: 19px; }
+.kpi-ico.i1 { background: linear-gradient(135deg,#818CF8,#6366F1); }
+.kpi-ico.i2 { background: linear-gradient(135deg,#60A5FA,#3B82F6); }
+.kpi-ico.i3 { background: linear-gradient(135deg,#C084FC,#9333EA); }
+.kpi-ico.i4 { background: linear-gradient(135deg,#F472B6,#DB2777); }
+
+/* home welcome */
+.home-welcome { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+.home-welcome .hw-hi { font-size: 13px; color: var(--fg3); margin-bottom: 4px; }
+.home-welcome h1 { font-size: 26px; font-weight: 700; letter-spacing: -.02em; color: var(--fg); line-height: 1.2; }
+.home-welcome .hw-sub { font-size: 12px; color: var(--fg3); margin-top: 4px; }
+.hw-date { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 12px; background: var(--glass-strong); border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow); font-size: 12px; font-weight: 600; color: var(--fg2); }
+.hw-date svg { width: 15px; height: 15px; color: var(--primary); }
+
+/* nav banners */
+.content .nav-banner-grid { gap: 16px; }
+.content .nav-banner { padding: 18px; }
+.content .nav-banner:hover { transform: translateY(-3px); border-color: rgba(99,102,241,.35); box-shadow: 0 14px 36px rgba(99,102,241,.18); }
+.content .nb-icon { border-radius: 12px; }
+.content .nb-count { color: var(--fg); }
+
+/* activity */
+.content .activity-icon { border-radius: 10px; }
+.content .home-cols { gap: 16px; }
+
+/* tables */
+.content table.dt thead th { background: rgba(238,240,255,.6); text-transform: none; letter-spacing: 0; font-size: 11.5px; color: var(--fg3); }
+.content table.dt tbody tr:hover { background: rgba(99,102,241,.05); }
+.content .section-hd { border-bottom: 1px solid var(--border); padding: 16px 20px 14px; }
+.content .section-count { background: var(--primary-bg); color: var(--primary); }
+.content .pill.blue { background: rgba(99,102,241,.12); color: #4F46E5; }
+
+/* schedule */
+.content #pageSchedule .cal-scroll { margin: 16px 24px 24px; border-radius: 20px; border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow); background: var(--glass-strong) !important; backdrop-filter: blur(20px); }
+.content .cal-cell.alt { background: rgba(238,240,255,.35); }
+.content .day-hd.today .dom { background: var(--accent-grad); }
+
+/* modals */
+.overlay { background: rgba(30,27,75,.28); backdrop-filter: blur(6px); }
+/* backdrop-filter を付けると内部の日付カレンダー(position:fixed)が切れるため付けない */
+.overlay .modal { background: rgba(255,255,255,.96); border: 1px solid var(--glass-border); border-radius: 22px; box-shadow: 0 30px 80px rgba(67,56,202,.25); }
+.overlay .modal-header { background: var(--accent-grad); }
+.overlay .modal-footer { background: rgba(238,240,255,.5); }
+.overlay .field input, .overlay .field select { border-radius: 10px; }
+.overlay .field input:focus, .overlay .field select:focus { box-shadow: 0 0 0 3px rgba(99,102,241,.15); }
+
+/* bottom nav (mobile) */
+.bottom-nav { background: rgba(255,255,255,.72) !important; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-top: 1px solid rgba(255,255,255,.8) !important; }
+
+
+
+/* 予定詳細：日時変更 */
+.det-edit { margin-top: 6px; padding: 14px; border-radius: 14px; background: rgba(99,102,241,.06); border: 1px solid rgba(99,102,241,.14); display: flex; flex-direction: column; gap: 10px; }
+.det-edit-title { font-size: 12px; font-weight: 700; color: var(--fg2); }
+.det-warn { font-size: 11px; font-weight: 600; color: #92400E; background: #FEF3C7; border-radius: 8px; padding: 6px 10px; }
+.det-save { align-self: flex-end; }
+
+/* ドラッグ＆ドロップ */
+.content .ev { touch-action: none; cursor: grab; user-select: none; -webkit-user-select: none; }
+.ev.ev-dragging { opacity: .35; }
+.ev.ev-ghost { position: fixed; left: 0; top: 0; z-index: 1000; pointer-events: none; cursor: grabbing; opacity: .92; box-shadow: 0 12px 28px rgba(67,56,202,.30); border-radius: 8px; padding: 3px 6px; font-size: 10px; overflow: hidden; border-left: 3px solid transparent; }
+body.is-dragging, body.is-dragging * { cursor: grabbing !important; }
+.content .cal-cell.drop-target { background: rgba(99,102,241,.18) !important; }
+.content .cal-cell.drop-bad { background: rgba(220,38,38,.15) !important; }
+
+/* KPI は幅に合わせて折り返し */
+.content .kpi-grid { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)) !important; }
+
+/* topbar の折り返し防止 */
+.content .topbar-title, .content .staff-filter, .content .btn-today, .content .cal-legend span, .content .week-label { white-space: nowrap; }
+.content .topbar-title { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+@media (max-width: 1280px) { .content #legendWrap { display: none !important; } }
+@media (max-width: 960px)  { .content #staffFiltersWrap { display: none !important; } }
+@media (max-width: 768px) {
+  .content .page-body { padding: 16px 14px 80px; }
+  .content #pageSchedule .cal-scroll { margin: 12px; }
+  .home-welcome h1 { font-size: 21px; }
+}
 </style>
 </head>
 <body>
@@ -726,9 +880,9 @@ tr:hover .row-actions { opacity: 1; }
 <!-- SIDEBAR -->
 <div class="sidebar">
   <div class="sidebar-logo">
-    <div class="sidebar-logo-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+    <div class="sidebar-logo-icon"><img src="assets/logo-mark.png" alt="AI BUDDY"></div>
     <div>
-      <div class="sidebar-logo-text">AI BUDDY</div>
+      <div class="sidebar-logo-text"><img src="assets/logo-wordmark.png" alt="AI BUDDY"></div>
       <div class="sidebar-logo-sub">Management Portal</div>
     </div>
   </div>
@@ -784,11 +938,18 @@ tr:hover .row-actions { opacity: 1; }
 
   <!-- ─── HOME ─── -->
   <div id="pageHome" class="page-body">
+    <div class="home-welcome">
+      <div>
+        <h1>AI BUDDY ダッシュボード</h1>
+        <div class="hw-sub">AI伴走支援サービスの今日の状況です</div>
+      </div>
+      <div class="hw-date"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span id="hwDate"></span></div>
+    </div>
     <div class="kpi-grid">
-      <div class="kpi-card blue"><div class="kpi-label">当月 MRR</div><div class="kpi-value" id="homeMRR">¥0</div><div class="kpi-diff" id="homeMRRDiff">—</div></div>
-      <div class="kpi-card green"><div class="kpi-label">稼働クライアント</div><div class="kpi-value" id="clientCountPill2">0社</div><div class="kpi-diff">目標 <strong>15社</strong></div></div>
-      <div class="kpi-card amber"><div class="kpi-label">今月 訪問件数</div><div class="kpi-value" id="homeVisits">0件</div><div class="kpi-diff" id="homeVisitsPlan">予定 0件</div></div>
-      <div class="kpi-card purple"><div class="kpi-label">ARR（年間換算）</div><div class="kpi-value" id="homeARR">¥0</div><div class="kpi-diff">—</div></div>
+      <div class="kpi-card blue"><div class="kpi-ico i1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div><div class="kpi-label">当月 MRR</div><div class="kpi-value" id="homeMRR">¥0</div><div class="kpi-diff" id="homeMRRDiff">—</div></div>
+      <div class="kpi-card green"><div class="kpi-ico i2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div><div class="kpi-label">稼働クライアント</div><div class="kpi-value" id="clientCountPill2">0社</div><div class="kpi-diff">目標 <strong>15社</strong></div></div>
+      <div class="kpi-card amber"><div class="kpi-ico i3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div><div class="kpi-label">今月 訪問件数</div><div class="kpi-value" id="homeVisits">0件</div><div class="kpi-diff" id="homeVisitsPlan">予定 0件</div></div>
+      <div class="kpi-card purple"><div class="kpi-ico i4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div><div class="kpi-label">ARR（年間換算）</div><div class="kpi-value" id="homeARR">¥0</div><div class="kpi-diff">—</div></div>
     </div>
 
     <div class="nav-banner-grid" style="margin-bottom:16px;">
@@ -824,7 +985,7 @@ tr:hover .row-actions { opacity: 1; }
         <div class="obj-meta">
           <div class="obj-label">Client Management</div>
           <div class="obj-name">顧問リスト</div>
-          <div class="obj-sub" id="clientsMeta">担当者別クライアント一覧 · 合計 11社</div>
+          <div class="obj-sub" id="clientsMeta">担当者別クライアント一覧 · 合計 0社</div>
         </div>
       </div>
       <div id="clientsInner"></div>
@@ -922,6 +1083,16 @@ tr:hover .row-actions { opacity: 1; }
     <div class="modal-body">
       <div id="detHeader" style="padding:12px 14px;border-radius:10px;margin-bottom:4px;"></div>
       <div id="detBody"></div>
+      <div class="det-edit">
+        <div class="det-edit-title">日時を変更</div>
+        <div class="field"><label>日付</label><div id="d-date-picker" class="date-picker-wrap"></div><input type="hidden" id="d-date"></div>
+        <div class="modal-row">
+          <div class="field"><label>開始時刻</label><select id="d-start" onchange="checkDetConflict()"></select></div>
+          <div class="field"><label>所要時間</label><select id="d-dur" onchange="checkDetConflict()"><option value="1">30分</option><option value="2">1時間</option><option value="3">1.5時間</option><option value="4">2時間</option><option value="6">3時間</option></select></div>
+        </div>
+        <div class="det-warn" id="detWarn" style="display:none;"></div>
+        <button class="mf-btn green det-save" onclick="saveEventTime()">日時を変更する</button>
+      </div>
     </div>
     <div class="modal-footer">
       <button class="mf-btn danger" onclick="deleteEvent()">この予定を削除</button>
@@ -966,24 +1137,41 @@ tr:hover .row-actions { opacity: 1; }
 
 <script>
 // ── DATA ── //
-let STAFF = [];
+const DEMO = window.DEMO_DATA || null;  // デモ版のみ demo-data.js が定義
+let STAFF = DEMO ? DEMO.staff : [];
 const STAFF_COLORS = [
   {color:'#4A7BF5',bg:'#EBF1FF'},{color:'#8B5CF6',bg:'#EDE9FE'},{color:'#16A34A',bg:'#DCFCE7'},
   {color:'#D97706',bg:'#FEF3C7'},{color:'#DC2626',bg:'#FEE2E2'},{color:'#EC4899',bg:'#FCE7F3'},
   {color:'#0D9488',bg:'#CCFBF1'},{color:'#EA580C',bg:'#FFEDD5'},{color:'#7C3AED',bg:'#EDE9FE'},
   {color:'#0284C7',bg:'#E0F2FE'},
 ];
-const CLIENTS = ['株式会社田中製作所','有限会社山本商事','合同会社鈴木食品','株式会社青山物流','株式会社大阪印刷','有限会社名古屋電機','株式会社福岡農業','合同会社東京広告','株式会社仙台テック','合同会社広島物産','株式会社神戸設計'];
 const PLANS = {
   light:    { label:'ライト',        color:'#6366F1', bg:'#EEF0FF', mrr:200000 },
   standard: { label:'スタンダード',  color:'#4A7BF5', bg:'#EBF1FF', mrr:300000 },
   project:  { label:'プロジェクト型',color:'#8B5CF6', bg:'#EDE9FE', mrr:0 },
 };
-const clientList = [];
-const MRR_HISTORY = [];
-let events = [];
-let nextId = 20;
-const TODAY = new Date(2026,9,9);
+const clientList = DEMO ? DEMO.clients : [];
+// MRR推移・月次レポート（顧客の契約開始月から算出。spot = プロジェクト型の一括売上）
+function ymOf(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;}
+function monthlyStats(){
+  const cur=ymOf(TODAY);
+  const first=clientList.map(c=>c.since).filter(Boolean).sort()[0]||cur;
+  // 契約開始の前月から当月まで（最大6ヶ月）
+  const [fy,fm]=first.split('-').map(Number);
+  let d=new Date(fy,fm-2,1);
+  const months=[];
+  while(ymOf(d)<=cur){months.push(ymOf(d));d=new Date(d.getFullYear(),d.getMonth()+1,1);}
+  return months.slice(-6).map(ym=>{
+    const active=clientList.filter(c=>c.since<=ym);
+    const mrr=active.reduce((s,c)=>s+(PLANS[c.plan]?.mrr||0),0);
+    const spot=clientList.filter(c=>c.since===ym).reduce((s,c)=>s+(c.spot||0),0);
+    return {month:ym,label:+ym.slice(5)+'月',mrr,new:clientList.filter(c=>c.since===ym).length,churn:0,revenue:mrr+spot,
+      note:ym===first?'（サービス開始）':''};
+  });
+}
+let events = DEMO ? DEMO.events : [];
+let nextId = DEMO ? DEMO.nextId : 1;
+const TODAY = DEMO ? new Date(DEMO.today+'T00:00:00') : (()=>{const d=new Date();d.setHours(0,0,0,0);return d;})();
 let weekStart = new Date(TODAY); weekStart.setDate(TODAY.getDate()-((TODAY.getDay()+6)%7));
 let activeStaff = 'all';
 let detEventId = null, addSlotDate = null, addSlotTime = null;
@@ -1085,6 +1273,7 @@ function dpSelect(wrapperId, hiddenId, ds){
   buildDatePicker(wrapperId, hiddenId, ds);
   const cal=document.getElementById(wrapperId+'-cal');
   if(cal) cal.classList.remove('open');
+  if(hiddenId==='d-date') checkDetConflict();
 }
 function dpMove(wrapperId, hiddenId, dir){
   const wrap=document.getElementById(wrapperId);
@@ -1228,6 +1417,8 @@ function switchPage(page){
 
 // ── HOME ── //
 function renderHome(){
+  const hw=document.getElementById('hwDate');
+  if(hw) hw.textContent=`${TODAY.getFullYear()}年${TODAY.getMonth()+1}月${TODAY.getDate()}日（${'日月火水木金土'[TODAY.getDay()]}）`;
   const cnt=clientList.length;
   const totalMRR=clientList.reduce((s,c)=>s+(PLANS[c.plan]?.mrr||0),0);
   const pill=document.getElementById('clientCountPill2');
@@ -1243,13 +1434,13 @@ function renderHome(){
   if(el('homeARR')) el('homeARR').textContent=fmt(totalMRR*12);
   if(el('nbMRR')) el('nbMRR').innerHTML=fmt(totalMRR)+'<small>当月 MRR</small>';
   if(el('nbARR')) el('nbARR').innerHTML=fmt(totalMRR*12)+'<small>ARR</small>';
-  const visitCount=events.filter(e=>e.type==='ev-visit'&&e.date.startsWith('2026-10')).length;
+  const visitCount=events.filter(e=>e.type==='ev-visit'&&e.date.startsWith(ymOf(TODAY))).length;
   if(el('homeVisits')) el('homeVisits').textContent=visitCount+'件';
   if(el('homeVisitsPlan')) el('homeVisitsPlan').textContent='今月の訪問';
 
   const evBg={'ev-visit':'#DBEAFE','ev-online':'#DCFCE7','ev-chat':'#EDE9FE','ev-report':'#FEF3C7','ev-seminar':'#FFE4E6'};
   const evFg={'ev-visit':'#1E40AF','ev-online':'#166534','ev-chat':'#4C1D95','ev-report':'#92400E','ev-seminar':'#9F1239'};
-  const sorted=[...events].sort((a,b)=>a.date>b.date?-1:1).slice(0,6);
+  const sorted=events.filter(e=>e.date<=dateStr(TODAY)).sort((a,b)=>a.date!==b.date?(a.date>b.date?-1:1):b.slot-a.slot).slice(0,6);
   document.getElementById('activityList').innerHTML=sorted.map(e=>`
     <div class="activity-row">
       <div class="activity-icon" style="background:${evBg[e.type]};color:${evFg[e.type]};">${TYPE_ICON[e.type]}</div>
@@ -1287,15 +1478,33 @@ function render(){
     const isToday=dateStr(d)===dateStr(TODAY);
     html+=`<div class="day-hd${isToday?' today':''}"><span class="dow">${dow}</span><span class="dom">${d.getDate()}</span></div>`;
   });
+  // 時間が重なる予定は横に並べる（col: 列番号 / cols: 列数）
+  const layout={};
+  days.forEach(d=>{
+    const ds=dateStr(d);
+    const list=events.filter(e=>e.date===ds&&(activeStaff==='all'||e.staff===activeStaff)).sort((a,b)=>a.slot-b.slot||b.dur-a.dur);
+    let group=[],groupEnd=-1,colEnds=[];
+    const flush=()=>{group.forEach(e=>layout[e.id].cols=colEnds.length);group=[];colEnds=[];};
+    list.forEach(e=>{
+      if(e.slot>=groupEnd) flush();
+      let c=colEnds.findIndex(end=>end<=e.slot);
+      if(c<0){c=colEnds.length;colEnds.push(0);}
+      colEnds[c]=e.slot+e.dur;
+      layout[e.id]={col:c};group.push(e);groupEnd=Math.max(groupEnd,e.slot+e.dur);
+    });
+    flush();
+  });
   SLOTS.forEach((t,si)=>{
     html+=`<div class="time-lbl">${t.endsWith(':00')?t:''}</div>`;
     days.forEach(d=>{
       const ds=dateStr(d);
       const evs=events.filter(e=>e.date===ds&&e.slot===si&&(activeStaff==='all'||e.staff===activeStaff));
-      html+=`<div class="cal-cell${si%2?' alt':''}" onclick="cellClick(event,'${ds}',${si})">`;
+      html+=`<div class="cal-cell${si%2?' alt':''}" data-date="${ds}" data-slot="${si}" onclick="cellClick(event,'${ds}',${si})">`;
       evs.forEach(e=>{
         const h=e.dur*24-4;
-        html+=`<div class="ev ${e.type}" style="top:2px;height:${h}px;" onclick="event.stopPropagation();openDetail(${e.id})">
+        const L=layout[e.id]||{col:0,cols:1};
+        const pos=L.cols>1?`left:calc(${L.col*100/L.cols}% + 2px);right:auto;width:calc(${100/L.cols}% - 4px);`:'';
+        html+=`<div class="ev ${e.type}" style="top:2px;height:${h}px;${pos}" onpointerdown="evPointerDown(event,${e.id})" onclick="event.stopPropagation();if(!suppressEvClick)openDetail(${e.id})">
           <div class="ev-time">${SLOTS[e.slot]}${activeStaff==='all'?' · '+STAFF[e.staff]?.short:''}${e.recur?' ↺':''}</div>
           <div class="ev-name">${e.client}</div>
         </div>`;
@@ -1416,7 +1625,131 @@ function openDetail(id){
     ${e.recur?`<div class="ev-det-row"><span class="ev-det-label">繰り返し</span><span class="pill blue" style="font-size:10px;">↺ ${recurLabel[e.recur]} · 全${seriesCount}件</span></div>`:''}`;
   const seriesBtn=document.getElementById('detSeriesBtn');
   if(seriesBtn) seriesBtn.style.display=e.seriesId?'':'none';
+  document.getElementById('d-start').innerHTML=SLOTS.map((t,i)=>`<option value="${i}">${t}</option>`).join('');
+  document.getElementById('d-start').value=e.slot;
+  const durSel=document.getElementById('d-dur');
+  if(![...durSel.options].some(o=>+o.value===e.dur)) durSel.insertAdjacentHTML('beforeend',`<option value="${e.dur}">${e.dur*30}分</option>`);
+  durSel.value=e.dur;
+  document.getElementById('d-date').value=e.date;
+  document.getElementById('detWarn').style.display='none';
   document.getElementById('detOverlay').hidden=false;
+  setTimeout(()=>buildDatePicker('d-date-picker','d-date',e.date),0);
+}
+
+// ── 予定の日時変更 ── //
+function detConflicts(){
+  const e=events.find(x=>x.id===detEventId);if(!e)return [];
+  const date=document.getElementById('d-date').value;
+  const slot=parseInt(document.getElementById('d-start').value);
+  const dur=parseInt(document.getElementById('d-dur').value);
+  return eventConflicts(e,date,slot,dur);
+}
+function checkDetConflict(){
+  const w=document.getElementById('detWarn');if(!w)return;
+  const c=detConflicts();
+  if(c.length){
+    const e=events.find(x=>x.id===detEventId);
+    w.textContent=`⚠ ${STAFF[e.staff].short}さんの「${c[0].client}」（${SLOTS[c[0].slot]}〜）と時間が重なっています`;
+    w.style.display='';
+  } else w.style.display='none';
+}
+function eventConflicts(e,date,slot,dur){
+  return events.filter(x=>x.id!==e.id&&x.staff===e.staff&&x.date===date&&x.slot<slot+dur&&slot<x.slot+x.dur);
+}
+// 予定を移動（詳細モーダル・ドラッグ共通）
+function moveEvent(e,date,slot,dur){
+  if(slot+dur>SLOTS.length){showToast('終了時刻が21:00を超えるため移動できません');return false;}
+  if(date===e.date&&slot===e.slot&&dur===e.dur) return false;
+  const hadConflict=eventConflicts(e,date,slot,dur).length>0;
+  Object.assign(e,{date,slot,dur});
+  const c=clientList.find(x=>x.name===e.client);
+  if(c){const nxt=events.filter(x=>x.client===c.name&&x.date>=dateStr(TODAY)).map(x=>x.date).sort()[0];if(nxt)c.nextVisit=nxt;}
+  if(currentPage==='schedule')render();
+  if(currentPage==='home')renderHome();
+  if(currentPage==='dashboard')renderDashboard();
+  if(currentPage==='clients')renderClients();
+  showToast(`${e.client}：${date.slice(5).replace('-','/')} ${SLOTS[slot]} に変更しました${hadConflict?'（時間重複あり）':''}`);
+  return true;
+}
+function saveEventTime(){
+  const e=events.find(x=>x.id===detEventId);if(!e)return;
+  const date=document.getElementById('d-date').value;
+  const slot=parseInt(document.getElementById('d-start').value);
+  const dur=parseInt(document.getElementById('d-dur').value);
+  if(!date||isNaN(slot))return;
+  if(date===e.date&&slot===e.slot&&dur===e.dur){showToast('日時は変更されていません');return;}
+  if(slot+dur>SLOTS.length){showToast('終了時刻が21:00を超えています');return;}
+  closeDet();
+  if(currentPage==='schedule'){const d=new Date(date+'T00:00:00');weekStart=addDays(d,-((d.getDay()+6)%7));}
+  moveEvent(e,date,slot,dur);
+}
+
+// ── ドラッグ＆ドロップ ── //
+let drag=null, suppressEvClick=false;
+function evPointerDown(ev,id){
+  if(ev.button>0) return;
+  const el=ev.currentTarget, r=el.getBoundingClientRect();
+  drag={id,el,sx:ev.clientX,sy:ev.clientY,offX:ev.clientX-r.left,offY:ev.clientY-r.top,w:r.width,h:r.height,active:false,ghost:null,target:null};
+  document.addEventListener('pointermove',evPointerMove,{passive:false});
+  document.addEventListener('pointerup',evPointerUp);
+  document.addEventListener('pointercancel',evPointerEnd);
+}
+function evPointerMove(ev){
+  if(!drag) return;
+  if(!drag.active){
+    if(Math.hypot(ev.clientX-drag.sx,ev.clientY-drag.sy)<6) return;
+    drag.active=true;
+    const g=drag.el.cloneNode(true);
+    g.classList.add('ev-ghost');g.removeAttribute('onclick');g.removeAttribute('onpointerdown');
+    Object.assign(g.style,{width:drag.w+'px',height:drag.h+'px'});
+    document.body.appendChild(g);drag.ghost=g;
+    drag.el.classList.add('ev-dragging');
+    document.body.classList.add('is-dragging');
+  }
+  ev.preventDefault();
+  const gx=ev.clientX-drag.offX, gy=ev.clientY-drag.offY;
+  drag.ghost.style.transform=`translate(${gx}px,${gy}px)`;
+  // 端に来たら自動スクロール
+  const sc=document.querySelector('#pageSchedule .cal-scroll');
+  if(sc){const r=sc.getBoundingClientRect();if(ev.clientY<r.top+40)sc.scrollTop-=12;else if(ev.clientY>r.bottom-40)sc.scrollTop+=12;}
+  // カードの上端を基準にドロップ先を決める
+  const hit=document.elementFromPoint(ev.clientX,gy+6);
+  const cell=hit&&hit.closest('.cal-cell');
+  setDropTarget(cell?{date:cell.dataset.date,slot:+cell.dataset.slot}:null);
+}
+function setDropTarget(t){
+  document.querySelectorAll('.cal-cell.drop-target,.cal-cell.drop-bad').forEach(c=>c.classList.remove('drop-target','drop-bad'));
+  drag.target=t;
+  if(!t) return;
+  const e=events.find(x=>x.id===drag.id);
+  const bad=t.slot+e.dur>SLOTS.length;
+  for(let i=t.slot;i<Math.min(t.slot+e.dur,SLOTS.length);i++){
+    const c=document.querySelector(`.cal-cell[data-date="${t.date}"][data-slot="${i}"]`);
+    if(c) c.classList.add(bad?'drop-bad':'drop-target');
+  }
+}
+function evPointerUp(){
+  const d=drag;
+  if(d&&d.active){
+    suppressEvClick=true;setTimeout(()=>suppressEvClick=false,0);
+    const e=events.find(x=>x.id===d.id);
+    evPointerEnd();
+    if(e&&d.target) moveEvent(e,d.target.date,d.target.slot,e.dur);
+    return;
+  }
+  evPointerEnd();
+}
+function evPointerEnd(){
+  document.removeEventListener('pointermove',evPointerMove);
+  document.removeEventListener('pointerup',evPointerUp);
+  document.removeEventListener('pointercancel',evPointerEnd);
+  if(drag){
+    drag.ghost&&drag.ghost.remove();
+    drag.el.classList.remove('ev-dragging');
+    document.querySelectorAll('.cal-cell.drop-target,.cal-cell.drop-bad').forEach(c=>c.classList.remove('drop-target','drop-bad'));
+  }
+  document.body.classList.remove('is-dragging');
+  drag=null;
 }
 function closeDet(){document.getElementById('detOverlay').hidden=true;detEventId=null;}
 function deleteEvent(){events=events.filter(e=>e.id!==detEventId);closeDet();if(currentPage==='schedule')render();showToast('予定を削除しました');}
@@ -1480,7 +1813,8 @@ function renderClients(){
 // ── SALES ── //
 function renderSales(){
   const totalMRR=clientList.reduce((s,c)=>s+(PLANS[c.plan]?.mrr||0),0);
-  const prevMRR=0,diff=totalMRR-prevMRR;
+  const MRR_HISTORY=monthlyStats().map(m=>({month:m.label,mrr:m.mrr}));
+  const prevMRR=MRR_HISTORY.length>=2?MRR_HISTORY[MRR_HISTORY.length-2].mrr:0,diff=totalMRR-prevMRR;
   const staffMRR=STAFF.map((_,i)=>clientList.filter(c=>c.staff===i).reduce((s,c)=>s+(PLANS[c.plan]?.mrr||0),0));
   const maxStaffMRR=Math.max(...staffMRR);
   const planCounts={light:0,standard:0,project:0};
@@ -1497,37 +1831,36 @@ function renderSales(){
     });
     const areaPath=`M ${pts[0]} L ${pts.join(' L ')} L ${pts[pts.length-1].split(',')[0]},${H-PB} L ${PL},${H-PB} Z`;
     trendSVG=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:110px;display:block;">
-      <defs><linearGradient id="tg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#4A7BF5" stop-opacity=".22"/><stop offset="100%" stop-color="#4A7BF5" stop-opacity=".02"/></linearGradient></defs>
+      <defs><linearGradient id="tg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#6366F1" stop-opacity=".22"/><stop offset="100%" stop-color="#6366F1" stop-opacity=".02"/></linearGradient></defs>
       <path d="${areaPath}" fill="url(#tg)"/>
-      <polyline points="${pts.join(' ')}" fill="none" stroke="#4A7BF5" stroke-width="2.5" stroke-linejoin="round"/>
+      <polyline points="${pts.join(' ')}" fill="none" stroke="#6366F1" stroke-width="2.5" stroke-linejoin="round"/>
       ${MRR_HISTORY.map((m,i)=>{
         const x=PL+i*(W-PL-PR)/(MRR_HISTORY.length-1);
         const y=PT+(1-m.mrr/maxMRR)*(H-PT-PB);
-        return `<circle cx="${x}" cy="${y}" r="3.5" fill="#4A7BF5" stroke="#fff" stroke-width="2"/>
+        return `<circle cx="${x}" cy="${y}" r="3.5" fill="#6366F1" stroke="#fff" stroke-width="2"/>
           <text x="${x}" y="${H-5}" text-anchor="middle" font-size="8" fill="#6B7280">${m.month}</text>`;
       }).join('')}
     </svg>`;
   }
 
-  const monthData=[
-  ];
+  const monthData=monthlyStats().filter(m=>m.mrr>0||m.revenue>0);
 
   document.getElementById('salesInner').innerHTML=`
   <div class="obj-header">
     <div class="obj-icon" style="background:var(--amb-bg);color:var(--amb);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="18" y="3" width="4" height="18" rx="1"/><rect x="10" y="8" width="4" height="13" rx="1"/><rect x="2" y="13" width="4" height="8" rx="1"/></svg></div>
-    <div class="obj-meta"><div class="obj-label">Revenue Management</div><div class="obj-name">売上管理</div><div class="obj-sub">2026年10月現在 · AI伴走サービス</div></div>
+    <div class="obj-meta"><div class="obj-label">Revenue Management</div><div class="obj-name">売上管理</div><div class="obj-sub">${TODAY.getFullYear()}年${TODAY.getMonth()+1}月現在 · AI伴走サービス</div></div>
     <div class="obj-badges"><span class="pill green">MRR ${fmt(totalMRR)}</span><span class="pill blue">▲ ${fmt(diff)} 前月比</span></div>
   </div>
 
   <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:16px;">
     <div class="kpi-card blue"><div class="kpi-label">当月 MRR</div><div class="kpi-value" style="color:var(--primary);">${fmt(totalMRR)}</div><div class="kpi-diff"><span class="up">▲ ${fmt(diff)}</span>&nbsp;前月比</div></div>
     <div class="kpi-card green"><div class="kpi-label">ARR（年間換算）</div><div class="kpi-value">${fmt(totalMRR*12)}</div><div class="kpi-diff"><span class="up">▲ ${fmt(diff*12)}</span></div></div>
-    <div class="kpi-card amber"><div class="kpi-label">ARPU / 社</div><div class="kpi-value">${fmt(Math.round(totalMRR/clientList.length))}</div><div class="kpi-diff">月額平均</div></div>
+    <div class="kpi-card amber"><div class="kpi-label">ARPU / 社</div><div class="kpi-value">${fmt(clientList.length?Math.round(totalMRR/clientList.length):0)}</div><div class="kpi-diff">月額平均</div></div>
     <div class="kpi-card purple"><div class="kpi-label">稼働クライアント</div><div class="kpi-value">${clientList.length}社</div><div class="kpi-diff">目標 15社</div></div>
   </div>
 
   <div class="sales-grid">
-    <div class="card"><div class="card-header"><span class="card-title">MRR 推移（6ヶ月）</span></div><div class="card-body">${trendSVG}</div></div>
+    <div class="card"><div class="card-header"><span class="card-title">MRR 推移（サービス開始から）</span></div><div class="card-body">${trendSVG}</div></div>
     <div class="card"><div class="card-header"><span class="card-title">プラン別 構成</span></div>
       <div class="card-body">
         ${['standard','light','project'].map(pk=>{
@@ -1579,7 +1912,7 @@ function renderSales(){
           ${monthData.map((m,i)=>{
             const prev=i>0?monthData[i-1].mrr:null;
             const mrrDiff=prev!=null?m.mrr-prev:null;
-            const isThis=m.month==='2026-10';
+            const isThis=m.month===ymOf(TODAY);
             return `<tr style="${isThis?'background:var(--primary-bg);font-weight:600;':''}">
               <td style="font-family:var(--mono);font-size:11px;">${m.month.replace('-','年')}月${m.note||''}</td>
               <td style="color:var(--grn);font-weight:700;">${m.new>0?'+'+m.new+'社':'—'}</td>
@@ -1599,7 +1932,8 @@ function renderSales(){
 // ── DASHBOARD ── //
 function renderDashboard(){
   const totalMRR=clientList.reduce((s,c)=>s+(PLANS[c.plan]?.mrr||0),0);
-  const prevMRR=0,diff=totalMRR-prevMRR;
+  const MRR_HISTORY=monthlyStats().map(m=>({month:m.label,mrr:m.mrr}));
+  const prevMRR=MRR_HISTORY.length>=2?MRR_HISTORY[MRR_HISTORY.length-2].mrr:0,diff=totalMRR-prevMRR;
   const staffMRR=STAFF.map((_,i)=>clientList.filter(c=>c.staff===i).reduce((s,c)=>s+(PLANS[c.plan]?.mrr||0),0));
   const planCounts={light:0,standard:0,project:0};
   clientList.forEach(c=>planCounts[c.plan]=(planCounts[c.plan]||0)+1);
@@ -1616,14 +1950,14 @@ function renderDashboard(){
     const areaPath=`M ${pts[0][0]},${pts[0][1]} ${pts.map(p=>`L ${p[0]},${p[1]}`).join(' ')} L ${pts[pts.length-1][0]},${H-PB} L ${pts[0][0]},${H-PB} Z`;
     const yTicks=[0,Math.round(maxMRR/2),maxMRR];
     mrrSVG=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:150px;display:block;">
-      <defs><linearGradient id="mg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#4A7BF5" stop-opacity=".22"/><stop offset="100%" stop-color="#4A7BF5" stop-opacity=".02"/></linearGradient></defs>
+      <defs><linearGradient id="mg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#6366F1" stop-opacity=".22"/><stop offset="100%" stop-color="#6366F1" stop-opacity=".02"/></linearGradient></defs>
       ${yTicks.map(v=>{const y=PT+(1-v/maxMRR)*(H-PT-PB);
         return `<line x1="${PL}" y1="${y}" x2="${W-PR}" y2="${y}" stroke="#E4E9F5" stroke-width="1"/>
           <text x="${PL-4}" y="${y+3}" text-anchor="end" font-size="8" fill="#A0ABBA">${v===0?'0':v>=1000000?'¥'+(v/1000000)+'M':'¥'+(v/10000)+'万'}</text>`;
       }).join('')}
       <path d="${areaPath}" fill="url(#mg)"/>
-      <polyline points="${pts.map(p=>p.join(',')).join(' ')}" fill="none" stroke="#4A7BF5" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
-      ${pts.map((p,i)=>`<circle cx="${p[0]}" cy="${p[1]}" r="4" fill="#4A7BF5" stroke="#fff" stroke-width="2"/>
+      <polyline points="${pts.map(p=>p.join(',')).join(' ')}" fill="none" stroke="#6366F1" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+      ${pts.map((p,i)=>`<circle cx="${p[0]}" cy="${p[1]}" r="4" fill="#6366F1" stroke="#fff" stroke-width="2"/>
         <text x="${p[0]}" y="${H-8}" text-anchor="middle" font-size="8.5" fill="#6B7280">${MRR_HISTORY[i].month}</text>`).join('')}
     </svg>`;
   }
@@ -1637,7 +1971,7 @@ function renderDashboard(){
   let cumAngle=0;
   const r=40,cx=60,cy=55,stroke=14;
   const arcs=planPct.map(p=>{
-    const angle=(p.val/total)*2*Math.PI;
+    const angle=total?(p.val/total)*2*Math.PI:0;
     const x1=cx+r*Math.cos(cumAngle-Math.PI/2),y1=cy+r*Math.sin(cumAngle-Math.PI/2);
     cumAngle+=angle;
     const x2=cx+r*Math.cos(cumAngle-Math.PI/2),y2=cy+r*Math.sin(cumAngle-Math.PI/2);
@@ -1674,15 +2008,15 @@ function renderDashboard(){
 
   document.getElementById('dashInner').innerHTML=`
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
-    <div><div style="font-size:20px;font-weight:700;">ダッシュボード</div><div style="font-size:12px;color:var(--fg3);margin-top:2px;">2026年10月 · AI BUDDY 事業KPI</div></div>
-    <span class="pill blue">最終更新: 10/9 09:00</span>
+    <div><div style="font-size:20px;font-weight:700;">ダッシュボード</div><div style="font-size:12px;color:var(--fg3);margin-top:2px;">${TODAY.getFullYear()}年${TODAY.getMonth()+1}月 · AI BUDDY 事業KPI</div></div>
+    <span class="pill blue">${TODAY.getMonth()+1}/${TODAY.getDate()} 時点</span>
   </div>
 
   <div class="kpi-grid" style="grid-template-columns:repeat(5,1fr);margin-bottom:16px;">
     <div class="kpi-card blue"><div class="kpi-label">MRR</div><div class="kpi-value" style="color:var(--primary);">${fmt(totalMRR)}</div><div class="kpi-diff"><span class="up">▲ ${fmt(diff)}</span> 前月比</div></div>
     <div class="kpi-card green"><div class="kpi-label">ARR</div><div class="kpi-value">${fmt(totalMRR*12)}</div><div class="kpi-diff">年間換算</div></div>
     <div class="kpi-card amber"><div class="kpi-label">稼働クライアント</div><div class="kpi-value">${clientList.length}<span style="font-size:12px;">社</span></div><div class="kpi-diff">目標 15社</div></div>
-    <div class="kpi-card purple"><div class="kpi-label">ARPU</div><div class="kpi-value">${fmt(Math.round(totalMRR/clientList.length))}</div><div class="kpi-diff">/ 社・月</div></div>
+    <div class="kpi-card purple"><div class="kpi-label">ARPU</div><div class="kpi-value">${fmt(clientList.length?Math.round(totalMRR/clientList.length):0)}</div><div class="kpi-diff">/ 社・月</div></div>
     <div class="kpi-card red"><div class="kpi-label">今週アクション</div><div class="kpi-value">${events.filter(e=>e.date>=dateStr(weekStart)&&e.date<=dateStr(addDays(weekStart,4))).length}<span style="font-size:12px;">件</span></div><div class="kpi-diff">訪問+MTG+報告</div></div>
   </div>
 
